@@ -1,9 +1,13 @@
 package server;
 
+import database.DataAccessLayer;
 import java.io.DataInputStream;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -15,6 +19,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import utilities.Client;
 
 public class Server extends Application implements Runnable{
     ServerSocket serverSocket;
@@ -125,13 +130,13 @@ class Listener extends Thread{
                  String type
                     = (String)clinetMessage.get("Type");
                  
-                 boolean status;
+                 int status;
                  switch (type) {
                     case "sign in":
-                        status = handleSignIn();
+                        status = handleSignIn(clinetMessage);
                     break;
                     case "sign up":
-                        status = handleSignUp();
+                        status = handleSignUp(clinetMessage);
                     break;
                     // additional cases as needed
                     default:
@@ -149,11 +154,42 @@ class Listener extends Thread{
     }
     }
     
-    public boolean handleSignIn(){
-        return true;
+    public int handleSignIn(JSONObject message){
+            
+        return 1;
     }
     
-    public boolean handleSignUp(){
-        return true;
+    public int handleSignUp(JSONObject message){
+        int output = 0;
+        Client client = new Client();
+        
+        String username
+            = (String)message.get("username");
+        String password
+            = (String)message.get("password");
+        String email
+            = (String)message.get("email");
+        String phone
+            = (String)message.get("phone");
+        Long balance
+            = (Long)message.get("balance");
+        
+        client.setUsername(username);
+        client.setPassword(password);           
+        client.setEmail(email);
+        client.setPhone(phone);
+        client.setBalance(balance);
+        
+            try {
+                int results = DataAccessLayer.addUser(client);
+            } catch (SQLException ex) {
+                switch(ex.getErrorCode())
+                {
+                    case 1:
+                        System.out.println("duplicate primary key username alreade in use");
+                        break;
+                }
+            }
+        return output;
     }    
 }

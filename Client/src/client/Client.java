@@ -2,9 +2,9 @@ package client;
 
 class Client{
     String username, password, phone, email;
-    int balance;
+    Long balance;
 
-    public int getBalance() {
+    public Long getBalance() {
         return balance;
     }
 
@@ -28,7 +28,7 @@ class Client{
         this.username = username;
     }
 
-    public void setBalance(int balance) {
+    public void setBalance(Long balance) {
         this.balance = balance;
     }
 

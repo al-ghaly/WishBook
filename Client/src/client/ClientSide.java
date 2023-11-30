@@ -64,7 +64,7 @@ public class ClientSide extends Application {
             String conPass = root.conPasswordTxt.getText();
             String email = root.emailTxt.getText();
             String phone = root.phoneTxt.getText();
-            int balance = Integer.parseInt(root.balanceTxt.getText());
+            Long balance = Long.parseLong(root.balanceTxt.getText());
             root.usernameTxt.clear();
             root.passwordTxt.clear();
             root.conPasswordTxt.clear();
@@ -142,7 +142,7 @@ public class ClientSide extends Application {
             signUpData.put("password", client.getPassword());
             signUpData.put("email", client.getEmail());
             signUpData.put("phone", client.getPhone()); 
-            signUpData.put("balance", new Integer(client.getBalance()));
+            signUpData.put("balance", new Long(client.getBalance()));
             // Send the JSON string to the server
             ps.println(signUpData);
             ps.flush();
