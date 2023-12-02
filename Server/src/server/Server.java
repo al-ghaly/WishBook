@@ -130,20 +130,21 @@ class Listener extends Thread{
                  String type
                     = (String)clinetMessage.get("Type");
                  
-                 int status;
+                 int status = 0;
                  switch (type) {
                     case "sign in":
                         status = handleSignIn(clinetMessage);
                     break;
                     case "sign up":
                         status = handleSignUp(clinetMessage);
+                        
                     break;
                     // additional cases as needed
                     default:
                     break;
 }
-                 // Respond to the server: according to the status update the user
-                 this.outputData.println(message + " From Server!");
+                 // Respond to the client: according to the status update the user
+                 this.outputData.println(status);
                  this.outputData.flush(); // Added1
                 }
             }
@@ -160,7 +161,6 @@ class Listener extends Thread{
     }
     
     public int handleSignUp(JSONObject message){
-        int output = 0;
         Client client = new Client();
         
         String username
@@ -182,14 +182,14 @@ class Listener extends Thread{
         
             try {
                 int results = DataAccessLayer.addUser(client);
+                return 1;
             } catch (SQLException ex) {
                 switch(ex.getErrorCode())
                 {
                     case 1:
-                        System.out.println("duplicate primary key username alreade in use");
-                        break;
+                        return -1;   
                 }
             }
-        return output;
+        return 1;
     }    
 }

@@ -9,3 +9,9 @@
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover; 
 }
+
+.backgroundedHome{
+    -fx-background-image: url("../Images/Img3.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover; 
+}

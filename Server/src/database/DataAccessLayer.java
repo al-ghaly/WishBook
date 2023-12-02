@@ -28,8 +28,8 @@ public class DataAccessLayer {
         stmt.setString(3, client.getEmail());
         stmt.setString(4, client.getPhone());
         stmt.setLong(5, client.getBalance());
-        results = stmt.executeUpdate();  
-        System.out.println(results);        
+        results = stmt.executeUpdate();         
         return results;
     }
+    
    }
