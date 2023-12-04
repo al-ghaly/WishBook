@@ -2,7 +2,7 @@ package database;
 
 import java.sql.*;
 import oracle.jdbc.OracleDriver;
-import utilities.Client;
+import utilities.*;
 
 public class DataAccessLayer {
   
@@ -31,5 +31,20 @@ public class DataAccessLayer {
         results = stmt.executeUpdate();         
         return results;
     }
-    
+
+    public static String getUser(String username) throws SQLException{
+        ResultSet results;
+        DriverManager.registerDriver(new OracleDriver());
+        Connection con = DriverManager.getConnection(
+                "jdbc:oracle:thin:@localhost:1521:XE",
+                "WishBook", "123");
+
+        PreparedStatement stmt = con.prepareStatement(
+                "Select password, balance from users where username = ?");
+        stmt.setString(1, username);
+
+        results = stmt.executeQuery();
+        results.next();
+        return results.getString(1) + "-" + results.getLong(2);
+    }
    }

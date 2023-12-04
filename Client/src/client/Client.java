@@ -1,6 +1,6 @@
 package client;
 
-class Client{
+public class Client{
     String username, password, phone, email;
     Long balance;
 
