@@ -6,7 +6,6 @@ import java.net.Socket;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -52,37 +51,24 @@ public class LogInController implements Initializable {
 
             // Perform login asynchronously in a separate thread
             if (username.isEmpty() || password.isEmpty()) {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        showAlert("Enter all required data!");
-                    }
-                });
-
+                showAlert("Enter all required data!");
             } else {
-                Thread loginThread = new Thread(() -> handleLogin(client, e));
-                loginThread.start();
+                handleLogin(client, e);
             }
         });
 
         signUpButton.setOnAction(e -> {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        switchToSignUp(e);
-                    } catch (Exception e) {
-                        showAlert("An Error Happened");
-                    }
+                try {
+                    switchToSignUp(e);
+                } catch (Exception ex) {
+                    showAlert("An Error Happened");
                 }
-            });
         });
 
     }
 
     private void handleLogin(Client client, ActionEvent e) {
         try {
-            // Replace the IP address and port with your server's IP and port
             Socket socket = new Socket(ip, port);
 
             // Create data input and output streams
@@ -108,43 +94,22 @@ public class LogInController implements Initializable {
                 case "success":
                     String password = (String) serverMessage.get("password");
                     if (!password.equals(client.getPassword())) {
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                showAlert("Wrong Password!!");
-                            }
-                        });
+                        showAlert("Wrong Password!!");
                     } else {
                         String balance = (String) serverMessage.get("balance");
                         client.setBalance(Long.parseLong(balance));
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    switchToHome(e, client);
-                                } catch (Exception ex) {
-                                    ex.printStackTrace();
-                                    showAlert("An Error Happened");
-                                }
-                            }
-                        });
+                        try {
+                            switchToHome(e, client);
+                        } catch (Exception ex) {
+                            showAlert("An Error Happened");
+                        }
                     }
                     break;
                 case "username not found":
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            showAlert("Invalid Username!!");
-                        }
-                    });
+                    showAlert("Invalid Username!!");
                     break;
                 case "An Error Happened":
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            showAlert("An Error Happened. Try Later.");
-                        }
-                    });
+                    showAlert("An Error Happened. Try Later.");
                     break;
             }
 
@@ -154,12 +119,7 @@ public class LogInController implements Initializable {
             socket.close();
         } catch (Exception ex) {
             // Provide feedback to the user about the error
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    showAlert("Server is Down!\nWe may be on a break. Try Later.");
-                }
-            });
+            showAlert("Server is Down!\nWe may be on a break. Try Later.");
         }
     }
 

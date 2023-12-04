@@ -22,7 +22,6 @@ public class DataAccessLayer {
 
         PreparedStatement stmt = con.prepareStatement(
                 "insert into users values(?, ?, ?, ?, ?)");
-        //TODO: Check if the username is already there
         stmt.setString(1, client.getUsername());
         stmt.setString(2, client.getPassword());
         stmt.setString(3, client.getEmail());

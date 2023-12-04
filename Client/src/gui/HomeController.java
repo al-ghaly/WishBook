@@ -40,8 +40,6 @@ public class HomeController implements Initializable {
 
     private String username;
     private long balance;
-    private Stage stage;
-    private Scene scene;
 
 
     public void setData(String data, long balance) {
@@ -52,7 +50,7 @@ public class HomeController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
        usernameTxt.setText(username);
-       balanceTxt.setText(Long.toString(balance));
+       balanceTxt.setText(balance + " $");
        aboutButton.setOnAction(e -> {
           popUpAbout();
        });
@@ -84,8 +82,8 @@ public class HomeController implements Initializable {
 
     public void switchToLogIn(ActionEvent event) throws Exception{
         Parent logIn = FXMLLoader.load(getClass().getResource("../gui/LogIn.fxml"));
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(logIn);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Scene scene = new Scene(logIn);
         stage.setScene(scene);
         stage.show();
     }

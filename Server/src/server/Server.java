@@ -3,6 +3,7 @@ package server;
 import utilities.*;
 import database.*;
 import java.io.DataInputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -13,8 +14,6 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -34,31 +33,32 @@ public class Server extends Application implements Runnable{
     
     @Override
     public void start(Stage stage) throws Exception {
-       tempUI root = new tempUI();
-       Server server = new Server();
-        root.startButton.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
+        ServerUI root = new ServerUI();
+        Server server = new Server();
+        root.startButton.setOnAction(event ->{
+            if(root.startButton.isSelected()){
+                root.startButton.setText("Turn Off");
                 server.listen();
-                }
+                root.startButton.setDisable(true);
+            }
+            else{
+               root.startButton.setText("Turn On");
+            }
         });
-        Scene scene = new Scene(root);
-        
-       stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+        Scene scene = new Scene(root, 240, 240);
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
                 closeResources();
             }
         });
-
-        
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
     }
 
     public static void main(String[] args) {
         launch(args);
-       
     }
 
     @Override
@@ -87,7 +87,7 @@ public class Server extends Application implements Runnable{
             }
             stopApplication();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("An Error happened!");
         }
     }
     
@@ -106,7 +106,7 @@ class Listener extends Thread{
         DataInputStream inputData;
         PrintStream outputData;
         String message;
-    String status;
+        String status;
           
     public Listener(Socket socket){
         try{
@@ -117,7 +117,8 @@ class Listener extends Thread{
         catch(Exception e){
             e.printStackTrace();
         }
-    }  
+    }
+
     public void run(){
         while (true){
             try{
@@ -138,7 +139,7 @@ class Listener extends Thread{
                         status = handleSignIn(username);
                         break;
                     case "sign up":
-                        //int status1 = handleSignUp(clinetMessage);
+                        status = handleSignUp(clinetMessage);
                         break;
                     default:
                     break;
@@ -148,11 +149,10 @@ class Listener extends Thread{
                  this.outputData.flush();
                 }
             }
-        
             catch(Exception e){
-            e.printStackTrace();
+                System.out.println("Error in the Database Server");
             }
-    }
+        }
     }
     
     public String handleSignIn(String username){
@@ -178,37 +178,34 @@ class Listener extends Thread{
             }
   }
     
-//    public int handleSignUp(JSONObject message){
-//        Client client = new Client();
-//
-//        String username
-//            = (String)message.get("username");
-//        String password
-//            = (String)message.get("password");
-//        String email
-//            = (String)message.get("email");
-//        String phone
-//            = (String)message.get("phone");
-//        Long balance
-//            = (Long)message.get("balance");
-//
-//        client.setUsername(username);
-//        client.setPassword(password);
-//        client.setEmail(email);
-//        client.setPhone(phone);
-//        client.setBalance(balance);
-//
-//            try {
-//                int results;
-//                results = DataAccessLayer.addUser(client);
-//                return 1;
-//            } catch (SQLException ex) {
-//                switch(ex.getErrorCode())
-//                {
-//                    case 1:
-//                        return -1;
-//                }
-//            }
-//        return 1;
-//    }
+    public String handleSignUp(JSONObject message){
+        Client client = new Client();
+
+        String username
+            = (String)message.get("username");
+        String password
+            = (String)message.get("password");
+        String email
+            = (String)message.get("email");
+        String phone
+            = (String)message.get("phone");
+        Long balance
+            = (Long)message.get("balance");
+
+        client.setUsername(username);
+        client.setPassword(password);
+        client.setEmail(email);
+        client.setPhone(phone);
+        client.setBalance(balance);
+
+            try {
+                DataAccessLayer.addUser(client);
+                return "success";
+            } catch (SQLException ex) {
+                if(ex.getErrorCode() == 1)
+                        return "duplicate username";
+                else
+                    return "error";
+            }
+    }
 }
