@@ -46,4 +46,26 @@ public class DataAccessLayer {
         results.next();
         return results.getString(1) + "-" + results.getLong(2);
     }
-   }
+
+    public static ResultSet getFriends(String username) throws SQLException{
+        ResultSet results;
+        DriverManager.registerDriver(new OracleDriver());
+        Connection con = DriverManager.getConnection(
+                "jdbc:oracle:thin:@localhost:1521:XE",
+                "WishBook", "123");
+
+        PreparedStatement stmt = con.prepareStatement(
+                "SELECT friend_name\n" +
+                        "  FROM friends\n" +
+                        " WHERE username = ?\n" +
+                        "UNION\n" +
+                        "SELECT username\n" +
+                        "  FROM friends\n" +
+                        " WHERE friend_name = ?");
+        stmt.setString(1, username);
+        stmt.setString(2, username);
+
+        results = stmt.executeQuery();
+        return results;
+    }
+}

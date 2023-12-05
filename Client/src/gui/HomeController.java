@@ -1,6 +1,9 @@
 package gui;
 
+import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -19,6 +22,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 public class HomeController implements Initializable {
 
@@ -47,6 +53,10 @@ public class HomeController implements Initializable {
     private Button requestButton;
     @FXML
     private GridPane homeContent;
+
+    ArrayList<String> friendsList = new ArrayList<>();
+    int port = 4015;
+    String ip = "127.0.0.1";
 
 
     public void setData(String data, long balance) {
@@ -83,11 +93,11 @@ public class HomeController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("./WishLists.fxml"));
             // Create an instance of your controller and set the data
             WishListsController wishListsController = new WishListsController();
-            // TODO: Do this:
             // Get the user's friends list here and pass an arraylist of usernames to the custom page
-            ArrayList<String> stringList = new ArrayList<>();
-            stringList.add("Apple");
-            wishListsController.setData(stringList);
+            if(getFriends(username).equals("success"))
+                wishListsController.setData(friendsList);
+            else
+                showAlert("An Error Happened loading your Home Page");
 
             loader.setControllerFactory(clazz -> {
                 if (clazz == WishListsController.class) {
@@ -107,7 +117,51 @@ public class HomeController implements Initializable {
         } catch (IOException e) {
             showAlert("An Error Happened Loading your Home Page!!");
         }
-    }    
+    }
+
+    public String getFriends(String username){
+        try {
+            Socket socket = new Socket(ip, port);
+            // Create data input and output streams
+            DataInputStream dis = new DataInputStream(socket.getInputStream());
+            PrintStream ps = new PrintStream(socket.getOutputStream());
+
+            // Send data to the server
+            JSONObject signUpData = new JSONObject();
+            signUpData.put("Type", "friends list");
+            signUpData.put("username", username);
+            // Send the JSON string to the server
+            ps.println(signUpData);
+            ps.flush();
+
+            // Read the server response
+            String response = dis.readLine();
+            // Behave according to the server response
+            Object serverResponse = JSONValue.parse(response);
+            JSONObject serverMessage = (JSONObject) serverResponse;
+            String status
+                    = (String) serverMessage.get("Status");
+
+            dis.close();
+            ps.close();
+            // Close the socket
+            socket.close();
+
+            if(status.equals("success")){
+                JSONArray friends = (JSONArray) serverMessage.get("friends");
+                for (Object friend : friends) {
+                    friendsList.add((String) friend);
+                }
+                return "success";
+            }
+            else
+                return "failed";
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return "failed";
+        }
+    }
 
     public void popUpAbout(){
         Stage popupStage = new Stage();

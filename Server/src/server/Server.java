@@ -1,18 +1,18 @@
 package server;
 
+import org.json.simple.JSONArray;
 import utilities.*;
 import database.*;
 import java.io.DataInputStream;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -141,8 +141,11 @@ class Listener extends Thread{
                     case "sign up":
                         status = handleSignUp(clinetMessage);
                         break;
+                     case "friends list":
+                         status = getFriendsList(username);
+                         break;
                     default:
-                    break;
+                        break;
 }
                  // Respond to the client: according to the status update the user
                  this.outputData.println(status);
@@ -207,5 +210,25 @@ class Listener extends Thread{
                 else
                     return "error";
             }
+    }
+
+    public String getFriendsList(String username){
+        JSONObject response = new JSONObject();
+        JSONArray usernamesList = new JSONArray();
+
+        try {
+            ResultSet results = DataAccessLayer.getFriends(username);
+
+            while (results.next()) {
+                String value = results.getString(1);
+                usernamesList.add(value);
+            }
+
+            response.put("friends", usernamesList);
+            response.put("Status", "success");
+        } catch (SQLException ex) {
+            response.put("Status", "failed");
+        }
+        return response.toString();
     }
 }

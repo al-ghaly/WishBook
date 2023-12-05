@@ -17,12 +17,11 @@ public class WishListsController implements Initializable {
 
     @FXML
     private VBox tablesContainer;
-    ArrayList<String> usernamesList = new ArrayList<String>();
+    ArrayList<String> usernamesList = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        System.out.println(usernamesList.size());
-        // Example: Creating tables dynamically
+        //Creating tables dynamically
         List<List<String>> listOfLists = getSampleData();
 
         for (List<String> dataList : listOfLists) {
