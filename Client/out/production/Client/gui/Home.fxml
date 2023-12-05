@@ -11,10 +11,10 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="673.0" prefWidth="1200.0" stylesheets="@../Styles/Style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.HomeController">
+<GridPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="673.0" prefWidth="1200.0" stylesheets="@../Styles/Style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.HomeController">
   <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="468.0" minWidth="10.0" prefWidth="297.0" />
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="717.0" minWidth="10.0" prefWidth="650.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" prefWidth="299.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" prefWidth="901.0" />
   </columnConstraints>
   <rowConstraints>
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -34,6 +34,7 @@
           <RowConstraints maxHeight="87.0" minHeight="10.0" percentHeight="7.3" prefHeight="61.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="91.0" minHeight="10.0" percentHeight="7.3" prefHeight="69.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="64.0" minHeight="10.0" percentHeight="7.3" prefHeight="62.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" percentHeight="7.3" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" percentHeight="7.3" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" percentHeight="7.3" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" percentHeight="7.3" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -62,17 +63,17 @@
                   <Image url="@../Images/icons8-bulleted-list-96.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="8" GridPane.valignment="CENTER">
+            <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="9" GridPane.valignment="CENTER">
                <image>
                   <Image url="@../Images/icons8-bell-96.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="9" GridPane.valignment="CENTER">
+            <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="10" GridPane.valignment="CENTER">
                <image>
                   <Image url="@../Images/icons8-log-out-96.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="11" GridPane.valignment="CENTER">
+            <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="12" GridPane.valignment="CENTER">
                <image>
                   <Image url="@../Images/icons8-about-96.png" />
                </image>
@@ -105,21 +106,21 @@
                <font>
                   <Font name="System Bold" size="20.0" />
                </font></Button>
-            <Button fx:id="notificationButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="72.0" prefWidth="262.0" text="Notifications" GridPane.columnIndex="1" GridPane.rowIndex="8">
+            <Button fx:id="notificationButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="72.0" prefWidth="262.0" text="Notifications" GridPane.columnIndex="1" GridPane.rowIndex="9">
                <GridPane.margin>
                   <Insets bottom="10.0" right="10.0" />
                </GridPane.margin>
                <font>
                   <Font name="System Bold" size="20.0" />
                </font></Button>
-            <Button fx:id="logOutButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="87.0" prefWidth="339.0" text="Log Out" GridPane.columnIndex="1" GridPane.rowIndex="9">
+            <Button fx:id="logOutButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="87.0" prefWidth="339.0" text="Log Out" GridPane.columnIndex="1" GridPane.rowIndex="10">
                <GridPane.margin>
                   <Insets bottom="10.0" right="10.0" />
                </GridPane.margin>
                <font>
                   <Font name="System Bold" size="20.0" />
                </font></Button>
-            <Button fx:id="aboutButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="85.0" prefWidth="223.0" text="About" GridPane.columnIndex="1" GridPane.rowIndex="11">
+            <Button fx:id="aboutButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="85.0" prefWidth="223.0" text="About" GridPane.columnIndex="1" GridPane.rowIndex="12">
                <GridPane.margin>
                   <Insets bottom="10.0" right="10.0" top="10.0" />
                </GridPane.margin>
@@ -147,17 +148,31 @@
                   <Label fx:id="balanceTxt" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #EE7214;" text="0 $" GridPane.columnIndex="1" />
                </children>
             </GridPane>
+            <Button fx:id="requestButton" layoutX="85.0" layoutY="229.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Friend Requests" GridPane.columnIndex="1" GridPane.rowIndex="8">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets bottom="10.0" right="10.0" />
+               </GridPane.margin>
+            </Button>
+            <ImageView fitHeight="45.0" fitWidth="45.0" layoutX="23.0" layoutY="511.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="8" GridPane.valignment="CENTER">
+               <image>
+                  <Image url="@../Images/icons8-friends-100.png" />
+               </image>
+            </ImageView>
          </children>
       </GridPane>
-      <GridPane GridPane.columnIndex="1">
+      <GridPane fx:id="homeContent" maxWidth="1.7976931348623157E308" prefWidth="200.0" GridPane.columnIndex="1">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" percentHeight="100.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
+         <GridPane.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </GridPane.margin>
       </GridPane>
    </children>
    <styleClass>

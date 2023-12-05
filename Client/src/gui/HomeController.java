@@ -1,6 +1,8 @@
 package gui;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
@@ -14,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -40,6 +43,10 @@ public class HomeController implements Initializable {
 
     private String username;
     private long balance;
+    @FXML
+    private Button requestButton;
+    @FXML
+    private GridPane homeContent;
 
 
     public void setData(String data, long balance) {
@@ -51,6 +58,7 @@ public class HomeController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
        usernameTxt.setText(username);
        balanceTxt.setText(balance + " $");
+
        aboutButton.setOnAction(e -> {
           popUpAbout();
        });
@@ -69,6 +77,36 @@ public class HomeController implements Initializable {
             });
         });
 
+        // Load the home page content
+        try {
+            // Create the home page content.
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("./WishLists.fxml"));
+            // Create an instance of your controller and set the data
+            WishListsController wishListsController = new WishListsController();
+            // TODO: Do this:
+            // Get the user's friends list here and pass an arraylist of usernames to the custom page
+            ArrayList<String> stringList = new ArrayList<>();
+            stringList.add("Apple");
+            wishListsController.setData(stringList);
+
+            loader.setControllerFactory(clazz -> {
+                if (clazz == WishListsController.class) {
+                    return wishListsController;
+                } else {
+                    try {
+                        return clazz.newInstance();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+            Parent testPage = loader.load();
+            // Add the loaded page to the homeContent grid
+            homeContent.getChildren().add(testPage);
+
+        } catch (IOException e) {
+            showAlert("An Error Happened Loading your Home Page!!");
+        }
     }    
 
     public void popUpAbout(){
