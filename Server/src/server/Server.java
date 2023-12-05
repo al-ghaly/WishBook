@@ -144,6 +144,9 @@ class Listener extends Thread{
                      case "friends list":
                          status = getFriendsList(username);
                          break;
+                     case "wishlist":
+                        status = getWishItems(username);
+                         break;
                     default:
                         break;
 }
@@ -226,6 +229,30 @@ class Listener extends Thread{
 
             response.put("friends", usernamesList);
             response.put("Status", "success");
+        } catch (SQLException ex) {
+            response.put("Status", "failed");
+        }
+        return response.toString();
+    }
+
+    public String getWishItems(String username){
+        JSONObject response = new JSONObject();
+        JSONArray wishListItems = new JSONArray();
+
+        try {
+            ResultSet results = DataAccessLayer.getWishList(username);
+
+            while (results.next()) {
+                //TODO: complete the logic!
+                String value = results.getString(1);
+                Item item = new Item();
+                item.setName(value);
+                wishListItems.add(item);
+            }
+
+
+            response.put("Status", "success");
+            //response.put("wishes", wishListItems);
         } catch (SQLException ex) {
             response.put("Status", "failed");
         }

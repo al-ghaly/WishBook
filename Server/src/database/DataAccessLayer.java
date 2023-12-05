@@ -68,4 +68,20 @@ public class DataAccessLayer {
         results = stmt.executeQuery();
         return results;
     }
+
+    public static ResultSet getWishList(String username) throws SQLException{
+        ResultSet results;
+        DriverManager.registerDriver(new OracleDriver());
+        Connection con = DriverManager.getConnection(
+                "jdbc:oracle:thin:@localhost:1521:XE",
+                "WishBook", "123");
+
+        PreparedStatement stmt = con.prepareStatement(
+                "select name from ");
+        stmt.setString(1, username);
+        stmt.setString(2, username);
+
+        results = stmt.executeQuery();
+        return results;
+    }
 }

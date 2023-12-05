@@ -158,7 +158,6 @@ public class HomeController implements Initializable {
                 return "failed";
 
         } catch (Exception ex) {
-            ex.printStackTrace();
             return "failed";
         }
     }

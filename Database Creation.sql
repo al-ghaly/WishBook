@@ -37,7 +37,12 @@ CREATE TABLE user_items
     CONSTRAINT fk4 FOREIGN KEY (id) REFERENCES items (id)
 );
 
-select * from user_tables
-where TABLE_NAME = 'USERS';
+CREATE SEQUENCE item_id_seq START WITH 1 INCREMENT BY 1;
 
-select * from users;
+CREATE OR REPLACE TRIGGER item_id_trg
+    BEFORE INSERT
+    ON items
+    FOR EACH ROW
+BEGIN
+    :new.id := item_id_seq.NEXTVAL;
+END item_id_trg;
