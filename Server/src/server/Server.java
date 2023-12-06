@@ -156,6 +156,7 @@ class Listener extends Thread{
                 }
             }
             catch(Exception e){
+                e.printStackTrace();
                 System.out.println("Error in the Database Server");
             }
         }
@@ -243,17 +244,20 @@ class Listener extends Thread{
             ResultSet results = DataAccessLayer.getWishList(username);
 
             while (results.next()) {
-                //TODO: complete the logic!
-                String value = results.getString(1);
-                Item item = new Item();
-                item.setName(value);
+                String name = results.getString(3);
+                String category = results.getString(4);
+                int id = results.getInt(1);
+                int paid = results.getInt(2);
+                int price = results.getInt(5);
+                String date = results.getDate(6).toString();
+                String item = id + "--" + name + "--" + category + "--" + price + "--" + paid + "--" + date;
                 wishListItems.add(item);
             }
 
-
             response.put("Status", "success");
-            //response.put("wishes", wishListItems);
+            response.put("wishes", wishListItems);
         } catch (SQLException ex) {
+            ex.printStackTrace();
             response.put("Status", "failed");
         }
         return response.toString();

@@ -77,9 +77,15 @@ public class DataAccessLayer {
                 "WishBook", "123");
 
         PreparedStatement stmt = con.prepareStatement(
-                "select name from ");
+                "SELECT ui.id,\n" +
+                        "       paid,\n" +
+                        "       name,\n" +
+                        "       category,\n" +
+                        "       price\n" +
+                        ", date_added" +
+                        "  FROM user_items ui, items i\n" +
+                        " WHERE ui.id = i.id and username = ?");
         stmt.setString(1, username);
-        stmt.setString(2, username);
 
         results = stmt.executeQuery();
         return results;

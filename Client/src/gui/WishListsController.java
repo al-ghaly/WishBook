@@ -59,8 +59,8 @@ public class WishListsController implements Initializable {
             column.setCellValueFactory(new PropertyValueFactory<>(i));
             tableView.getColumns().add(column);
         });
-        TableColumn<Item, Integer> column = new TableColumn<>("ID");
-        column.setCellValueFactory(new PropertyValueFactory<>("ID"));
+        TableColumn<Item, Integer> column = new TableColumn<>("Id");
+        column.setCellValueFactory(new PropertyValueFactory<>("Id"));
         tableView.getColumns().add(1, column);
 
         // Fill the table
@@ -69,22 +69,23 @@ public class WishListsController implements Initializable {
     }
 
     public void fillTable(TableView<Item> tableView, String username){
-        if(getWishList(username).equals("success"))
-            // TODO: Fill the observable list from the json array
-            System.out.println("Success" + wishItems);
-        //else
-            //showAlert("An Error Happened loading " + username +" Wishes!");
-//        Item item = new Item();
-//        item.setId(10);
-//        item.setPrice(100);
-//        item.setPaid(50);
-//        item.setCategory("cat");
-//        item.setName("Item");
-//        item.setUsername("Alghaly");
-//        item.setDate("11/11/2011");
-//        ObservableList<Item> items =
-//                FXCollections.observableArrayList(item);
-//        tableView.setItems(items);
+        if(getWishList(username).equals("success")) {
+            ObservableList<Item> items =
+                    FXCollections.observableArrayList();
+            for (Object itemData : wishItems) {
+                Item item = new Item();
+                String[] data = itemData.toString().split("--");
+                item.setId(Integer.parseInt(data[0]));
+                item.setPrice(Integer.parseInt(data[4]));
+                item.setPaid(Integer.parseInt(data[3]));
+                item.setName(data[1]);
+                item.setCategory(data[2]);
+                item.setUsername(username);
+                item.setDate(data[5]);
+                items.add(item);
+            }
+            tableView.setItems(items);
+        }
     }
 
     public String getWishList(String username){
@@ -104,18 +105,15 @@ public class WishListsController implements Initializable {
 
             // Read the server response
             String response = dis.readLine();
-            System.out.println(response);
             // Behave according to the server response
             Object serverResponse = JSONValue.parse(response);
             JSONObject serverMessage = (JSONObject) serverResponse;
             String status
                     = (String) serverMessage.get("Status");
-
             dis.close();
             ps.close();
             // Close the socket
             socket.close();
-
             if(status.equals("success")){
                 wishItems = (JSONArray) serverMessage.get("wishes");
                 return "success";
@@ -124,20 +122,11 @@ public class WishListsController implements Initializable {
                 return "failed";
 
         } catch (Exception ex) {
-            ex.printStackTrace();
             return "failed";
         }
     }
 
     public void setData(ArrayList<String> usernamesList){
         this.usernamesList = usernamesList;
-    }
-
-    public void showAlert(String message) {
-        Alert a = new Alert(Alert.AlertType.ERROR);
-        a.setContentText(message);
-        a.setHeaderText("An Error Happened!");
-        a.setTitle("Error!!");
-        a.show();
     }
 }
