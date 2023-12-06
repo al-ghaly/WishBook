@@ -39,12 +39,13 @@ public class DataAccessLayer {
                 "WishBook", "123");
 
         PreparedStatement stmt = con.prepareStatement(
-                "Select password, balance from users where username = ?");
+                "Select password, balance, email, phone from users where username = ?");
         stmt.setString(1, username);
 
         results = stmt.executeQuery();
         results.next();
-        return results.getString(1) + "-" + results.getLong(2);
+        return results.getString(1) + "-" + results.getLong(2)
+                 + "-" + results.getString(3) + "-" + results.getString(4);
     }
 
     public static ResultSet getFriends(String username) throws SQLException{
@@ -89,5 +90,18 @@ public class DataAccessLayer {
 
         results = stmt.executeQuery();
         return results;
+    }
+
+    public static int deleteItem(Long id, String username) throws SQLException{
+        DriverManager.registerDriver(new OracleDriver());
+        Connection con = DriverManager.getConnection(
+                "jdbc:oracle:thin:@localhost:1521:XE",
+                "WishBook", "123");
+
+        PreparedStatement stmt = con.prepareStatement(
+                "update user_items set username = 'SYSTEM' where username = ? and id = ?");
+        stmt.setString(1, username);
+        stmt.setLong(2, id);
+        return stmt.executeUpdate();
     }
 }

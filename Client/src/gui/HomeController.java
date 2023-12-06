@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import client.Client;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -47,8 +48,7 @@ public class HomeController implements Initializable {
     @FXML
     private Label balanceTxt;
 
-    private String username;
-    private long balance;
+    Client client;
     @FXML
     private Button requestButton;
     @FXML
@@ -59,64 +59,68 @@ public class HomeController implements Initializable {
     String ip = "127.0.0.1";
 
 
-    public void setData(String data, long balance) {
-        this.username = data;
-        this.balance = balance;
+    public void setData(Client client) {
+        this.client = client;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-       usernameTxt.setText(username);
-       balanceTxt.setText(balance + " $");
+       usernameTxt.setText(client.getUsername());
+       balanceTxt.setText(client.getBalance() + " $");
 
        aboutButton.setOnAction(e -> {
           popUpAbout();
        });
 
         logOutButton.setOnAction(e -> {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        switchToLogIn(e);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        showAlert("An Error Happened");
-                    }
-                }
-            });
+            try {
+                switchToLogIn(e);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                showAlert("An Error Happened");
+            }
         });
-
+        // TODO: This should happen in a separate thread
+        //TODO: Remove the comment (We don't need to bother show the home page during test!!)
         // Load the home page content
-        try {
-            // Create the home page content.
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("./WishLists.fxml"));
-            // Create an instance of your controller and set the data
-            WishListsController wishListsController = new WishListsController();
-            // Get the user's friends list here and pass an arraylist of usernames to the custom page
-            if(getFriends(username).equals("success"))
-                wishListsController.setData(friendsList);
-            else
-                showAlert("An Error Happened loading your Home Page");
+//        try {
+//            // Create the home page content.
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("./WishLists.fxml"));
+//            // Create an instance of your controller and set the data
+//            WishListsController wishListsController = new WishListsController();
+//            // Get the user's friends list here and pass an arraylist of usernames to the custom page
+//            if(getFriends(client.getUsername()).equals("success"))
+//                wishListsController.setData(friendsList);
+//            else
+//                showAlert("An Error Happened loading your Home Page");
+//
+//            loader.setControllerFactory(clazz -> {
+//                if (clazz == WishListsController.class) {
+//                    return wishListsController;
+//                } else {
+//                    try {
+//                        return clazz.newInstance();
+//                    } catch (Exception e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                }
+//            });
+//            Parent testPage = loader.load();
+//            // Add the loaded page to the homeContent grid
+//            homeContent.getChildren().add(testPage);
+//
+//        } catch (IOException e) {
+//            showAlert("An Error Happened Loading your Home Page!!");
+//        }
 
-            loader.setControllerFactory(clazz -> {
-                if (clazz == WishListsController.class) {
-                    return wishListsController;
-                } else {
-                    try {
-                        return clazz.newInstance();
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            });
-            Parent testPage = loader.load();
-            // Add the loaded page to the homeContent grid
-            homeContent.getChildren().add(testPage);
-
-        } catch (IOException e) {
-            showAlert("An Error Happened Loading your Home Page!!");
-        }
+        profileButton.setOnAction(e -> {
+            try {
+                switchToUserProfile(e);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                showAlert("An Error Happened");
+            }
+        });
     }
 
     public String getFriends(String username){
@@ -185,5 +189,32 @@ public class HomeController implements Initializable {
         a.setHeaderText("An Error Happened!");
         a.setTitle("Error!!");
         a.show();
+    }
+
+    public void switchToUserProfile(ActionEvent event) throws Exception{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/UserProfile.fxml"));
+
+        // Create an instance of your controller and set the data
+        UserProfileController profileController = new UserProfileController();
+        profileController.setData(client);
+
+        loader.setControllerFactory(clazz -> {
+            if (clazz == UserProfileController.class) {
+                return profileController;
+            } else {
+                try {
+                    return clazz.newInstance();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        Stage popupStage = new Stage();
+        Parent home = loader.load();
+        Scene scene = new Scene(home);
+        popupStage.setScene(scene);
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.show();
     }
 }

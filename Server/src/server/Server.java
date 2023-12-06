@@ -147,6 +147,10 @@ class Listener extends Thread{
                      case "wishlist":
                         status = getWishItems(username);
                          break;
+                     case "delete item":
+                         Long id
+                                 = (Long)clinetMessage.get("id");
+                         status = deleteItem(id, username);
                     default:
                         break;
 }
@@ -171,7 +175,8 @@ class Listener extends Thread{
             String[] parts = results.split("-");
             response.put("password", parts[0]);
             response.put("balance", parts[1]);
-
+            response.put("email", parts[2]);
+            response.put("phone", parts[3]);
             return response.toString();
             } catch (SQLException ex) {
             if(ex.getErrorCode() == 17289) {
@@ -261,5 +266,13 @@ class Listener extends Thread{
             response.put("Status", "failed");
         }
         return response.toString();
+    }
+
+    public String deleteItem(Long id, String username){
+        try {
+            return DataAccessLayer.deleteItem(id, username) == 1?"success":"failed";
+        } catch (SQLException ex) {
+            return "failed";
+        }
     }
 }

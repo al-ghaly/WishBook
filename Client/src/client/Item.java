@@ -11,6 +11,7 @@ public class Item {
     private final SimpleStringProperty date = new SimpleStringProperty();
     private final SimpleIntegerProperty price = new SimpleIntegerProperty();
     private final SimpleIntegerProperty paid = new SimpleIntegerProperty();
+    private final SimpleIntegerProperty remaining = new SimpleIntegerProperty();
 
     public int getId() {
         return id.get();
@@ -94,5 +95,13 @@ public class Item {
 
     public void setPaid(int paid) {
         this.paid.set(paid);
+    }
+
+    public void setRemaining(int remaining) {
+        this.remaining.set(remaining);
+    }
+
+    public int getRemaining() {
+        return remaining.get();
     }
 }

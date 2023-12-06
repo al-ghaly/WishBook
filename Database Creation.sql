@@ -46,3 +46,5 @@ CREATE OR REPLACE TRIGGER item_id_trg
 BEGIN
     :new.id := item_id_seq.NEXTVAL;
 END item_id_trg;
+
+insert into users values('SYSTEM', 'SYS', 'SYS@ADMIN.com', 'PHONE', 0);

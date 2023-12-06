@@ -171,7 +171,7 @@ public class SignUpController implements Initializable {
 
         // Create an instance of your controller and set the data
         HomeController homeController = new HomeController();
-        homeController.setData(client.getUsername(), client.getBalance());
+        homeController.setData(client);
 
         loader.setControllerFactory(clazz -> {
             if (clazz == HomeController.class) {

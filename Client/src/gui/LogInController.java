@@ -98,6 +98,10 @@ public class LogInController implements Initializable {
                     } else {
                         String balance = (String) serverMessage.get("balance");
                         client.setBalance(Long.parseLong(balance));
+                        String email = (String) serverMessage.get("email");
+                        client.setEmail(email);
+                        String phone = (String) serverMessage.get("phone");
+                        client.setPhone(phone);
                         try {
                             switchToHome(e, client);
                         } catch (Exception ex) {
@@ -136,7 +140,7 @@ public class LogInController implements Initializable {
 
         // Create an instance of your controller and set the data
         HomeController homeController = new HomeController();
-        homeController.setData(client.getUsername(), client.getBalance());
+        homeController.setData(client);
 
         loader.setControllerFactory(clazz -> {
             if (clazz == HomeController.class) {
