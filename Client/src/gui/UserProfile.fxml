@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -11,7 +10,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1170.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="gui.UserProfileController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1170.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.UserProfileController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
   </columnConstraints>
@@ -49,7 +48,10 @@
                   <Insets left="40.0" />
                </GridPane.margin>
             </Label>
-            <Label fx:id="balanceTxt" alignment="BOTTOM_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-font-size: 25px; -fx-text-fill: #EC8F5E;" text="5000 $" GridPane.columnIndex="2" />
+            <Label fx:id="balanceTxt" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-font-size: 25px; -fx-text-fill: #EC8F5E;" text="5000 $" GridPane.columnIndex="2" GridPane.rowSpan="3">
+               <GridPane.margin>
+                  <Insets bottom="20.0" />
+               </GridPane.margin></Label>
          </children>
       </GridPane>
       <Button fx:id="removeBtn" alignment="CENTER" mnemonicParsing="false" style="-fx-font-size: 20px; -fx-label-padding: 5 20 5 20;" styleClass="profile-label" stylesheets="@../Styles/Style.css" text="Remove" GridPane.halignment="CENTER" GridPane.rowIndex="2">

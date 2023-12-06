@@ -151,6 +151,12 @@ class Listener extends Thread{
                          Long id
                                  = (Long)clinetMessage.get("id");
                          status = deleteItem(id, username);
+                         break;
+                     case "delete friend":
+                         String friendName
+                                 = (String)clinetMessage.get("friend name");
+                         status = deleteFriend(username, friendName);
+                         break;
                     default:
                         break;
 }
@@ -160,7 +166,6 @@ class Listener extends Thread{
                 }
             }
             catch(Exception e){
-                e.printStackTrace();
                 System.out.println("Error in the Database Server");
             }
         }
@@ -262,7 +267,6 @@ class Listener extends Thread{
             response.put("Status", "success");
             response.put("wishes", wishListItems);
         } catch (SQLException ex) {
-            ex.printStackTrace();
             response.put("Status", "failed");
         }
         return response.toString();
@@ -271,6 +275,13 @@ class Listener extends Thread{
     public String deleteItem(Long id, String username){
         try {
             return DataAccessLayer.deleteItem(id, username) == 1?"success":"failed";
+        } catch (SQLException ex) {
+            return "failed";
+        }
+    }
+    public String deleteFriend(String username, String friendName){
+        try {
+            return DataAccessLayer.deleteFriend(username, friendName) == 1?"success":"failed";
         } catch (SQLException ex) {
             return "failed";
         }

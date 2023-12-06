@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import client.Client;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -55,6 +54,8 @@ public class HomeController implements Initializable {
     private GridPane homeContent;
 
     ArrayList<String> friendsList = new ArrayList<>();
+    // success or failed depending on whether or not we retrieved the user's friends list successfully
+    String listStatus;
     int port = 4015;
     String ip = "127.0.0.1";
 
@@ -80,7 +81,9 @@ public class HomeController implements Initializable {
                 showAlert("An Error Happened");
             }
         });
-        // TODO: This should happen in a separate thread
+        //TODO: This should happen in a separate thread
+        listStatus = getFriends(client.getUsername());
+
         //TODO: Remove the comment (We don't need to bother show the home page during test!!)
         // Load the home page content
 //        try {
@@ -89,7 +92,7 @@ public class HomeController implements Initializable {
 //            // Create an instance of your controller and set the data
 //            WishListsController wishListsController = new WishListsController();
 //            // Get the user's friends list here and pass an arraylist of usernames to the custom page
-//            if(getFriends(client.getUsername()).equals("success"))
+//            if(listStatus.equals("success"))
 //                wishListsController.setData(friendsList);
 //            else
 //                showAlert("An Error Happened loading your Home Page");
@@ -115,9 +118,16 @@ public class HomeController implements Initializable {
 
         profileButton.setOnAction(e -> {
             try {
-                switchToUserProfile(e);
+                switchToUserProfile();
             } catch (Exception ex) {
-                ex.printStackTrace();
+                showAlert("An Error Happened");
+            }
+        });
+
+        friendListButton.setOnAction(e -> {
+            try {
+                switchToFriendsList();
+            } catch (Exception ex) {
                 showAlert("An Error Happened");
             }
         });
@@ -191,7 +201,7 @@ public class HomeController implements Initializable {
         a.show();
     }
 
-    public void switchToUserProfile(ActionEvent event) throws Exception{
+    public void switchToUserProfile() throws Exception{
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/UserProfile.fxml"));
 
         // Create an instance of your controller and set the data
@@ -201,6 +211,33 @@ public class HomeController implements Initializable {
         loader.setControllerFactory(clazz -> {
             if (clazz == UserProfileController.class) {
                 return profileController;
+            } else {
+                try {
+                    return clazz.newInstance();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        Stage popupStage = new Stage();
+        Parent home = loader.load();
+        Scene scene = new Scene(home);
+        popupStage.setScene(scene);
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.show();
+    }
+
+    public void switchToFriendsList() throws Exception{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/FriendsList.fxml"));
+
+        // Create an instance of your controller and set the data
+        FriendsListController friendsListController = new FriendsListController();
+        friendsListController.setData(friendsList, client.getUsername());
+
+        loader.setControllerFactory(clazz -> {
+            if (clazz == FriendsListController.class) {
+                return friendsListController;
             } else {
                 try {
                     return clazz.newInstance();

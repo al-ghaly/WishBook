@@ -99,9 +99,27 @@ public class DataAccessLayer {
                 "WishBook", "123");
 
         PreparedStatement stmt = con.prepareStatement(
-                "update user_items set username = 'SYSTEM' where username = ? and id = ?");
+                "delete from user_items where username = ? and id = ?");
         stmt.setString(1, username);
         stmt.setLong(2, id);
+        return stmt.executeUpdate();
+    }
+
+    public static int deleteFriend(String username, String friendName) throws SQLException{
+        DriverManager.registerDriver(new OracleDriver());
+        Connection con = DriverManager.getConnection(
+                "jdbc:oracle:thin:@localhost:1521:XE",
+                "WishBook", "123");
+
+        PreparedStatement stmt = con.prepareStatement(
+                "DELETE FROM\n" +
+                        "    friends\n" +
+                        "      WHERE    (username = ? AND friend_name = ?)\n" +
+                        "            OR username = ? AND friend_name = ?\n");
+        stmt.setString(1, username);
+        stmt.setString(2, friendName);
+        stmt.setString(3, friendName);
+        stmt.setString(4, username);
         return stmt.executeUpdate();
     }
 }
