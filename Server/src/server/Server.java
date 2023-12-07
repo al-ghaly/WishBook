@@ -157,6 +157,9 @@ class Listener extends Thread{
                                  = (String)clinetMessage.get("friend name");
                          status = deleteFriend(username, friendName);
                          break;
+                     case "friend profile":
+                         status = getFriendData(username);
+                         break;
                     default:
                         break;
 }
@@ -170,7 +173,37 @@ class Listener extends Thread{
             }
         }
     }
-    
+
+    private String getFriendData(String username) {
+        JSONObject response = new JSONObject();
+        JSONArray wishListItems = new JSONArray();
+        try {
+            String resultsData = DataAccessLayer.getUser(username);
+            ResultSet resultsWishList = DataAccessLayer.getWishList(username);
+
+            while (resultsWishList.next()) {
+                String name = resultsWishList.getString(3);
+                String category = resultsWishList.getString(4);
+                int id = resultsWishList.getInt(1);
+                int paid = resultsWishList.getInt(2);
+                int price = resultsWishList.getInt(5);
+                String date = resultsWishList.getDate(6).toString();
+                String item = id + "--" + name + "--" + category + "--" +
+                        price + "--" + paid + "--" + date;
+                wishListItems.add(item);
+            }
+            response.put("Status", "success");
+            response.put("wishes", wishListItems);
+            String[] parts = resultsData.split("-");
+            response.put("balance", parts[1]);
+            response.put("email", parts[2]);
+            response.put("phone", parts[3]);
+        } catch (SQLException ex) {
+            response.put("Status", "failed");
+        }
+        return response.toString();
+    }
+
     public String handleSignIn(String username){
         JSONObject response = new JSONObject();
 
@@ -260,7 +293,8 @@ class Listener extends Thread{
                 int paid = results.getInt(2);
                 int price = results.getInt(5);
                 String date = results.getDate(6).toString();
-                String item = id + "--" + name + "--" + category + "--" + price + "--" + paid + "--" + date;
+                String item = id + "--" + name + "--" + category +
+                        "--" + price + "--" + paid + "--" + date;
                 wishListItems.add(item);
             }
 

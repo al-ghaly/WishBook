@@ -13,8 +13,13 @@ import client.Client;
 import client.Item;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import org.json.simple.JSONObject;
 
 public class FriendsListController implements Initializable {
@@ -25,10 +30,8 @@ public class FriendsListController implements Initializable {
     private TextField searchBar;
     @javafx.fxml.FXML
     private Button removeBtn;
-    @javafx.fxml.FXML
-    private Button openBtn;
 
-     @javafx.fxml.FXML
+    @javafx.fxml.FXML
     private ListView<String> friendsList;
      String username;
 
@@ -65,16 +68,48 @@ public class FriendsListController implements Initializable {
             }
         });
 
+        // Get the mouse double click to work
         friendsList.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 // Double-click detected
                 int selectedIndex = friendsList.getSelectionModel().getSelectedIndex();
                 if (selectedIndex >= 0 && selectedIndex < friendsList.getItems().size()) {
                     String selectedItem = friendsList.getItems().get(selectedIndex);
-                    System.out.println("Double-clicked on: " + selectedItem);
+                    try {
+                        openUserProfile(selectedItem);
+                    } catch (Exception ex) {
+                        showAlert("An Error Happened");
+                    }
                 }
             }
         });
+    }
+
+    private void openUserProfile(String selectedItem) throws Exception{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/FriendProfile.fxml"));
+
+        // Create an instance of your controller and set the data
+        FriendProfileController friendProfileController = new FriendProfileController();
+        friendProfileController.setData(selectedItem);
+
+        loader.setControllerFactory(clazz -> {
+            if (clazz == FriendProfileController.class) {
+                return friendProfileController;
+            } else {
+                try {
+                    return clazz.newInstance();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        Stage popupStage = new Stage();
+        Parent home = loader.load();
+        Scene scene = new Scene(home);
+        popupStage.setScene(scene);
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.show();
     }
 
     private void filterFriendsList(String searchText) {
