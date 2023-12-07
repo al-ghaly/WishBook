@@ -77,6 +77,8 @@ public class FriendProfileController implements Initializable {
                             (long)contribution, message);
                     if(updated){
                         selectedItem.setPaid(selectedItem.getPaid() + contribution);
+                        selectedItem.setRemaining(selectedItem.getRemaining() - contribution);
+                        wishList.refresh();
                     }
                     else {
                         showAlert("An Error Happened");

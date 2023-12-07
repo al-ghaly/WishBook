@@ -154,7 +154,7 @@ public class DataAccessLayer {
             stmt2.executeUpdate();
             if (completed){
                 PreparedStatement stmt3 = con.prepareStatement(
-                        "insert into completions values (?, 'Item ' || ? || ' is completed! Go collect it.')");
+                        "insert into notifications values (?, 'Item ' || ? || ' is completed! Go collect it.')");
                 stmt3.setString(1, username);
                 stmt3.setString(2, itemName);
                 stmt3.executeUpdate();

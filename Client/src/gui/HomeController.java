@@ -131,6 +131,14 @@ public class HomeController implements Initializable {
                 showAlert("An Error Happened");
             }
         });
+
+        addItemButton.setOnAction(e -> {
+            try {
+                switchToAddItem();
+            } catch (Exception ex) {
+                showAlert("An Error Happened");
+            }
+        });
     }
 
     public String getFriends(String username){
@@ -238,6 +246,33 @@ public class HomeController implements Initializable {
         loader.setControllerFactory(clazz -> {
             if (clazz == FriendsListController.class) {
                 return friendsListController;
+            } else {
+                try {
+                    return clazz.newInstance();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        Stage popupStage = new Stage();
+        Parent home = loader.load();
+        Scene scene = new Scene(home);
+        popupStage.setScene(scene);
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.show();
+    }
+
+    public void switchToAddItem() throws Exception{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/AddItem.fxml"));
+
+        // Create an instance of your controller and set the data
+        AddItemController addItemController = new AddItemController();
+        addItemController.setData(client.getUsername());
+
+        loader.setControllerFactory(clazz -> {
+            if (clazz == AddItemController.class) {
+                return addItemController;
             } else {
                 try {
                     return clazz.newInstance();

@@ -44,12 +44,8 @@ CREATE TABLE notifications
     CONSTRAINT fk6 FOREIGN KEY (username) REFERENCES users (username)
 );
 
-CREATE TABLE completions
-(
-    username      VARCHAR2 (50),
-    description VARCHAR2(500),
-    CONSTRAINT fk7 FOREIGN KEY (username) REFERENCES users (username)
-);
+ALTER TABLE users
+ADD CONSTRAINT check_positive_values CHECK (balance >= 0);
 
 CREATE SEQUENCE item_id_seq START WITH 1 INCREMENT BY 1;
 
