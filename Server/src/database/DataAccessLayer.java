@@ -6,7 +6,7 @@ import utilities.*;
 
 public class DataAccessLayer {
   
-      public static void connect() throws SQLException{
+    public static void connect() throws SQLException{
         DriverManager.registerDriver(new OracleDriver());
         Connection con = DriverManager.getConnection(
                 "jdbc:oracle:thin:@localhost:1521:XE", 
@@ -187,5 +187,72 @@ public class DataAccessLayer {
             }
             return false;
         }
+    }
+
+    public static ResultSet getRequests(String username) throws SQLException{
+        ResultSet results;
+        DriverManager.registerDriver(new OracleDriver());
+        Connection con = DriverManager.getConnection(
+                "jdbc:oracle:thin:@localhost:1521:XE",
+                "WishBook", "123");
+
+        PreparedStatement stmt = con.prepareStatement("select friend_name from friend_requests where username = ?");
+        stmt.setString(1, username);
+
+        results = stmt.executeQuery();
+        return results;
+    }
+
+
+    public static int acceptFriend(String username, String friendname) throws SQLException {
+        DriverManager.registerDriver(new OracleDriver());
+        Connection con = DriverManager.getConnection(
+                "jdbc:oracle:thin:@localhost:1521:XE",
+                "WishBook", "123");
+
+        // Use a PreparedStatement with placeholders for parameters
+        //String query = "SELECT username, email, phone FROM users";
+        String query1 = "INSERT INTO friends VALUES(?, ?)";
+
+        PreparedStatement pstmt = con.prepareStatement(query1);
+        // Set values for the parameters
+        pstmt.setString(1, username);
+        pstmt.setString(2, friendname);
+
+        // Execute the query and return the ResultSet
+        return pstmt.executeUpdate();
+    }
+
+    public static int rejectFriend(String username, String friendname) throws SQLException {
+        DriverManager.registerDriver(new OracleDriver());
+        Connection con = DriverManager.getConnection(
+                "jdbc:oracle:thin:@localhost:1521:XE",
+                "WishBook", "123");
+
+        // Use a PreparedStatement with placeholders for parameters
+        //String query = "SELECT username, email, phone FROM users";
+        String query = "DELETE FROM friend_requests WHERE username = ? and friend_name = ?";
+
+        PreparedStatement pstmt = con.prepareStatement(query);
+        // Set values for the parameters
+        pstmt.setString(1, username);
+        pstmt.setString(2, friendname);
+
+        // Execute the query and return the ResultSet
+        return pstmt.executeUpdate();
+    }
+
+    public static ResultSet getNotifications(String username) throws SQLException{
+        ResultSet results;
+        DriverManager.registerDriver(new OracleDriver());
+        Connection con = DriverManager.getConnection(
+                "jdbc:oracle:thin:@localhost:1521:XE",
+                "WishBook", "123");
+
+        PreparedStatement stmt = con.prepareStatement("select description from notifications where username = ?");
+        stmt.setString(1, username);
+
+        results = stmt.executeQuery();
+        return results;
     }
 }

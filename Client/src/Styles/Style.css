@@ -23,3 +23,48 @@
     -fx-text-fill: #333333; /* Dark gray text color */
     -fx-padding: 5px;
 }
+.root {
+    -fx-background-color: #1E1E1E;
+    -fx-text-fill: #FFFFFF;
+}
+
+.label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.button {
+    -fx-background-color: #3498DB;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 14px;
+    -fx-padding: 8px 16px;
+}
+
+.text-area {
+    -fx-control-inner-background: #2C3E50;
+    -fx-text-fill: #FFFFFF;
+}
+
+.list-view, .table-view {
+    -fx-background-color: #2C3E50;
+    -fx-text-fill: #FFFFFF;
+    -fx-table-cell-border-color: transparent;
+}
+
+.list-cell:filled:selected, .table-row-cell:filled:selected {
+    -fx-background-color: #3498DB;
+    -fx-text-fill: #FFFFFF;
+}
+
+.list-cell:hover, .table-row-cell:hover {
+    -fx-background-color: #34495E;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #2C3E50;
+    -fx-text-fill: #FFFFFF;
+}
+
+.table-column {
+    -fx-alignment: CENTER;
+}

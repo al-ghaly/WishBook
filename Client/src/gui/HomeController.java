@@ -139,6 +139,31 @@ public class HomeController implements Initializable {
                 showAlert("An Error Happened");
             }
         });
+        requestButton.setOnAction(e -> {
+            try {
+                switchToRequests();
+            } catch (Exception ex) {
+                showAlert("An Error Happened");
+            }
+        });
+
+        addFriendButton.setOnAction(e -> {
+            try {
+                switchToAddFriend();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                showAlert("An Error Happened");
+            }
+        });
+
+        notificationButton.setOnAction(e -> {
+            try {
+                switchToNotifications();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                showAlert("An Error Happened");
+            }
+        });
     }
 
     public String getFriends(String username){
@@ -273,6 +298,87 @@ public class HomeController implements Initializable {
         loader.setControllerFactory(clazz -> {
             if (clazz == AddItemController.class) {
                 return addItemController;
+            } else {
+                try {
+                    return clazz.newInstance();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        Stage popupStage = new Stage();
+        Parent home = loader.load();
+        Scene scene = new Scene(home);
+        popupStage.setScene(scene);
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.show();
+    }
+
+    public void switchToRequests() throws Exception{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/FriendsRequest.fxml"));
+
+        // Create an instance of your controller and set the data
+        FriendsRequestController friendsRequestController = new FriendsRequestController();
+        friendsRequestController.setData(client.getUsername());
+
+        loader.setControllerFactory(clazz -> {
+            if (clazz == FriendsRequestController.class) {
+                return friendsRequestController;
+            } else {
+                try {
+                    return clazz.newInstance();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        Stage popupStage = new Stage();
+        Parent home = loader.load();
+        Scene scene = new Scene(home);
+        popupStage.setScene(scene);
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.show();
+    }
+
+    public void switchToAddFriend() throws Exception{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/AddFriend.fxml"));
+
+        // Create an instance of your controller and set the data
+        AddFriendController addFriendController = new AddFriendController();
+        addFriendController.setData(client.getUsername());
+
+        loader.setControllerFactory(clazz -> {
+            if (clazz == AddFriendController.class) {
+                return addFriendController;
+            } else {
+                try {
+                    return clazz.newInstance();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        Stage popupStage = new Stage();
+        Parent home = loader.load();
+        Scene scene = new Scene(home);
+        popupStage.setScene(scene);
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.show();
+    }
+
+    public void switchToNotifications() throws Exception{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/Notifications.fxml"));
+
+        // Create an instance of your controller and set the data
+        NotificationsController notificationsController = new NotificationsController();
+        notificationsController.setData(client.getUsername());
+
+        loader.setControllerFactory(clazz -> {
+            if (clazz == NotificationsController.class) {
+                return notificationsController;
             } else {
                 try {
                     return clazz.newInstance();

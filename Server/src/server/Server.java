@@ -177,7 +177,18 @@ class Listener extends Thread{
                          String itemName_ = (String)clinetMessage.get("item name");
                          String clientName_ = (String)clinetMessage.get("client name");
                          status = contribute(clientName_, username, itemID, itemName_, contributionValue, false);
-
+                         break;
+                     case "get requests":
+                         status = getRequests(username);
+                         break;
+                     case "reply to requests":
+                         String friendName_
+                                 = (String)clinetMessage.get("friend name");
+                         boolean status_ = (boolean) clinetMessage.get("status");
+                         status = replyToRequest(username, friendName_, status_);
+                         break;
+                     case "notifications":
+                         status = getNotifications(username);
                          break;
                     default:
                         break;
@@ -191,6 +202,67 @@ class Listener extends Thread{
                 System.out.println("Error in the Database Server");
             }
         }
+    }
+
+    private String getNotifications(String username) {
+        JSONObject response = new JSONObject();
+        JSONArray notifications = new JSONArray();
+
+        try {
+            ResultSet results = DataAccessLayer.getNotifications(username);
+            while (results.next()) {
+                String value = results.getString(1);
+                notifications.add(value);
+            }
+
+            response.put("notifications", notifications);
+            response.put("Status", "success");
+        } catch (SQLException ex) {
+            response.put("Status", "failed");
+        }
+        return response.toString();
+    }
+
+    private String replyToRequest(String username, String friendName_, boolean status_) {
+        if(status_) {
+            try {
+                DataAccessLayer.acceptFriend(username, friendName_);
+                DataAccessLayer.rejectFriend(username, friendName_);
+                return "success";
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "failed";
+            }
+        }
+            else{
+                try {
+                    DataAccessLayer.rejectFriend(username, friendName_);
+                    return "success";
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                    return "failed";
+            }
+        }
+    }
+
+    private String getRequests(String username) {
+        JSONObject response = new JSONObject();
+        JSONArray requestsList = new JSONArray();
+
+        try {
+            ResultSet results = DataAccessLayer.getRequests(username);
+            while (results.next()) {
+                String value = results.getString(1);
+                requestsList.add(value);
+            }
+
+            response.put("requests", requestsList);
+            response.put("Status", "success");
+        } catch (SQLException ex) {
+            response.put("Status", "failed");
+        }
+        return response.toString();
     }
 
     private String contribute(String clientName, String username, Long itemId, String itemName,
