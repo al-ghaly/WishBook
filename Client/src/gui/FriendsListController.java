@@ -90,7 +90,7 @@ public class FriendsListController implements Initializable {
 
         // Create an instance of your controller and set the data
         FriendProfileController friendProfileController = new FriendProfileController();
-        friendProfileController.setData(selectedItem);
+        friendProfileController.setData(selectedItem, username);
 
         loader.setControllerFactory(clazz -> {
             if (clazz == FriendProfileController.class) {

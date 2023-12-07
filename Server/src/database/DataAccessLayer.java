@@ -122,4 +122,70 @@ public class DataAccessLayer {
         stmt.setString(4, username);
         return stmt.executeUpdate();
     }
+
+    public static boolean updateItem(String clientName, String username,
+                                  Long itemId, String itemName,
+                                  Long contribution,
+                                  boolean completed){
+        Connection con = null;
+        try {
+            DriverManager.registerDriver(new OracleDriver());
+            con = DriverManager.getConnection(
+                    "jdbc:oracle:thin:@localhost:1521:XE",
+                    "WishBook", "123");
+
+            // Disable auto-commit to start a transaction
+            con.setAutoCommit(false);
+
+            // Prepare and execute your first delete statement
+            PreparedStatement stmt1 = con.prepareStatement(
+                    "update users set balance = balance - ? where username = ?");
+            stmt1.setString(2, clientName);
+            stmt1.setLong(1, contribution);
+            stmt1.executeUpdate();
+
+            PreparedStatement stmt2 = con.prepareStatement(
+                    "insert into notifications values (?, 'User ' || ? || ' Contributed by ' || ? || ' To your item: ' || ?)");
+            stmt2.setString(1, username);
+            stmt2.setString(2, clientName);
+            stmt2.setLong(3, contribution);
+            stmt2.setString(4, itemName);
+
+            stmt2.executeUpdate();
+            if (completed){
+                PreparedStatement stmt3 = con.prepareStatement(
+                        "insert into completions values (?, 'Item ' || ? || ' is completed! Go collect it.')");
+                stmt3.setString(1, username);
+                stmt3.setString(2, itemName);
+                stmt3.executeUpdate();
+
+                PreparedStatement stmt4 = con.prepareStatement(
+                        "delete from user_items where username = ? and id = ?");
+                stmt4.setString(1, username);
+                stmt4.setLong(2, itemId);
+                stmt4.executeUpdate();
+            }
+            else {
+                PreparedStatement stmt5 = con.prepareStatement(
+                        "update user_items set paid = paid + ? where username = ? and id = ?");
+                stmt5.setLong(1, contribution);
+                stmt5.setString(2, username);
+                stmt5.setLong(3, itemId);
+                stmt5.executeUpdate();
+            }
+            con.commit();
+            con.setAutoCommit(true);
+            return true;
+        } catch (SQLException e) {
+            // Handle exceptions and rollback the transaction if an error occurs
+            if (con != null) {
+                try {
+                    con.rollback();
+                } catch (SQLException rollbackException) {
+                    return false;
+                }
+            }
+            return false;
+        }
+    }
 }

@@ -160,6 +160,25 @@ class Listener extends Thread{
                      case "friend profile":
                          status = getFriendData(username);
                          break;
+                     case "complete":
+                         Long itemId
+                                 = (Long)clinetMessage.get("id");
+                         Long contribution
+                                 = (Long)clinetMessage.get("contribution");
+                         String itemName = (String)clinetMessage.get("item name");
+                         String clientName = (String)clinetMessage.get("client name");
+                         status = contribute(clientName, username, itemId, itemName, contribution, true);
+                         break;
+                     case "contribute":
+                         Long itemID
+                                 = (Long)clinetMessage.get("id");
+                         Long contributionValue
+                                 = (Long)clinetMessage.get("contribution");
+                         String itemName_ = (String)clinetMessage.get("item name");
+                         String clientName_ = (String)clinetMessage.get("client name");
+                         status = contribute(clientName_, username, itemID, itemName_, contributionValue, false);
+
+                         break;
                     default:
                         break;
 }
@@ -172,6 +191,13 @@ class Listener extends Thread{
                 System.out.println("Error in the Database Server");
             }
         }
+    }
+
+    private String contribute(String clientName, String username, Long itemId, String itemName,
+                              Long contribution, boolean completed) {
+        boolean updated =  DataAccessLayer.updateItem(clientName, username, itemId, itemName,
+                contribution, completed);
+        return updated?"success":"failed";
     }
 
     private String getFriendData(String username) {
@@ -313,6 +339,7 @@ class Listener extends Thread{
             return "failed";
         }
     }
+
     public String deleteFriend(String username, String friendName){
         try {
             return DataAccessLayer.deleteFriend(username, friendName) == 1?"success":"failed";

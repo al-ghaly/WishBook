@@ -37,6 +37,20 @@ CREATE TABLE user_items
     CONSTRAINT fk4 FOREIGN KEY (id) REFERENCES items (id)
 );
 
+CREATE TABLE notifications
+(
+    username      VARCHAR2 (50),
+    description VARCHAR2(500),
+    CONSTRAINT fk6 FOREIGN KEY (username) REFERENCES users (username)
+);
+
+CREATE TABLE completions
+(
+    username      VARCHAR2 (50),
+    description VARCHAR2(500),
+    CONSTRAINT fk7 FOREIGN KEY (username) REFERENCES users (username)
+);
+
 CREATE SEQUENCE item_id_seq START WITH 1 INCREMENT BY 1;
 
 CREATE OR REPLACE TRIGGER item_id_trg

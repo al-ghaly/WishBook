@@ -4,10 +4,7 @@ import java.io.DataInputStream;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import client.Client;
 import client.Item;
@@ -41,6 +38,7 @@ public class FriendProfileController implements Initializable {
     private TableView<Item> wishList;
 
     String username;
+    String clientName;
     Client client = new Client();
     JSONArray wishItems = new JSONArray();
 
@@ -67,22 +65,80 @@ public class FriendProfileController implements Initializable {
         valueTxt.disableProperty().bind(
                 wishList.getSelectionModel().selectedItemProperty().isNull());
         // Get The remove Button to Work
-//        contBtn.setOnAction(e -> {
-//            Item selectedItem = wishList.getSelectionModel().getSelectedItem();
-//            if (selectedItem != null) {
-//                if (showConfirm("Are you sure you want to remove "
-//                        + selectedItem.getName()).equals("Ok")) {
-//                    // Remove the selected item from the database
-//                    String status = deleteItem(selectedItem.getId(),
-//                            client.getUsername());
-//                    if (status.equals("success"))
-//                        wishList.getItems().remove(selectedItem);
-//                    else
-//                        showAlert("The item " + selectedItem.getName() + " is not deleted");
-//                }
-//            }
-//        });
+        contBtn.setOnAction(e -> {
+            Item selectedItem = wishList.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                if (validate(client.getBalance(), selectedItem.getRemaining())){
+                    int contribution = Integer.parseInt(valueTxt.getText());
+                    String message = contribution
+                            == selectedItem.getRemaining()?"complete":"contribute";
+                    boolean updated =
+                    contribute(clientName, username, selectedItem.getId(), selectedItem.getName(),
+                            (long)contribution, message);
+                    if(updated){
+                        selectedItem.setPaid(selectedItem.getPaid() + contribution);
+                    }
+                    else {
+                        showAlert("An Error Happened");
+                    }
+                }
+            }
+        });
+    }
 
+    public boolean contribute(String clientName, String username, int id, String itemName,
+                              Long contribution, String message) {
+        try {
+            Socket socket = new Socket(ip, port);
+            // Create data input and output streams
+            DataInputStream dis = new DataInputStream(socket.getInputStream());
+            PrintStream ps = new PrintStream(socket.getOutputStream());
+
+            // Send data to the server
+            JSONObject signUpData = new JSONObject();
+            signUpData.put("Type", message);
+            signUpData.put("client name", clientName);
+            signUpData.put("username", username);
+            signUpData.put("item name", itemName);
+            signUpData.put("id", id);
+            signUpData.put("contribution", contribution);
+            // Send the JSON string to the server
+            ps.println(signUpData);
+            ps.flush();
+
+            // Read the server response
+            String response = dis.readLine();
+            dis.close();
+            ps.close();
+            // Close the socket
+            socket.close();
+            return response.equals("success");
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    private boolean validate(Long balance, int remaining) {
+        try{
+            String contributionTxt = valueTxt.getText();
+            Long contribution = Long.parseLong(contributionTxt);
+            if(contribution > balance){
+                showAlert("You don't have enough balance!");
+                return false;
+            }
+            else if (contribution > remaining){
+                showAlert("You are giving too much money!");
+                return false;
+            }
+            else
+                return showConfirm("You are about to give: " + contributionTxt +
+                        " $ To: " + username +
+                        "\nAre you sure you want to contribute?").equals("Ok");
+        }
+        catch(Exception e){
+            showAlert("Enter a Valid Contribution value!");
+            return false;
+        }
     }
 
     private void setUpWishList() {
@@ -178,7 +234,24 @@ public class FriendProfileController implements Initializable {
         a.show();
     }
 
-    public void setData(String username) {
+    public void setData(String username, String clientName) {
         this.username = username;
+        this.clientName = clientName;
+    }
+
+    public String showConfirm(String message) {
+        Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+        a.setContentText(message);
+        a.setHeaderText("Action is irreversible!");
+        a.setTitle("Confirm");
+
+        Optional<ButtonType> result = a.showAndWait();
+        // Check the user's choice
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // User clicked OK
+            return "Ok";
+        } else {
+            return "Cancel";
+        }
     }
 }
