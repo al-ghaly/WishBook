@@ -35,6 +35,10 @@ public class UserProfileController implements Initializable {
     private Button removeBtn;
     @FXML
     private TableView<Item> wishList;
+    @FXML
+    private TextField value;
+    @FXML
+    private Button rechargeBtn;
 
     Client client;
     JSONArray wishItems = new JSONArray();
@@ -83,10 +87,56 @@ public class UserProfileController implements Initializable {
                     if (status.equals("success"))
                         wishList.getItems().remove(selectedItem);
                     else
-                        showAlert("The item " + selectedItem.getName() + " is not deleted");
+                        showAlert("The item " + selectedItem.getName() + " is not deleted", true);
                 }
             }
         });
+        rechargeBtn.setOnAction(e -> {
+            try {
+                Long balance = Long.parseLong(value.getText());
+                if (showConfirm("Are you sure you want to recharge your balance with  "
+                        + balance + " $").equals("Ok")) {
+                    recharge(client.getUsername(), balance);
+                }
+            }
+            catch (Exception ex){
+                showAlert("Enter a valid balance Number!", true);
+            }
+        });
+    }
+
+    private void recharge(String username, Long balance) {
+        try {
+            Socket socket = new Socket(ip, port);
+            // Create data input and output streams
+            DataInputStream dis = new DataInputStream(socket.getInputStream());
+            PrintStream ps = new PrintStream(socket.getOutputStream());
+
+            // Send data to the server
+            JSONObject signUpData = new JSONObject();
+            signUpData.put("Type", "recharge");
+            signUpData.put("username", username);
+            signUpData.put("balance", balance);
+            // Send the JSON string to the server
+            ps.println(signUpData);
+            ps.flush();
+
+            // Read the server response
+            String response = dis.readLine();
+            dis.close();
+            ps.close();
+            // Close the socket
+            socket.close();
+            if (response.equals("success")) {
+                client.setBalance(client.getBalance() + balance);
+                balanceTxt.setText(client.getBalance() + " $");
+                showAlert("Done", false);
+            } else
+                showAlert("An Error Happened!", true);
+
+        } catch (Exception ex) {
+            showAlert("An Error Happened!", true);
+        }
     }
 
     public void fillTable(TableView<Item> tableView, String username) {
@@ -182,10 +232,10 @@ public class UserProfileController implements Initializable {
         this.client = client;
     }
 
-    public void showAlert(String message) {
+    public void showAlert(String message, boolean error) {
         Alert a = new Alert(Alert.AlertType.INFORMATION);
         a.setContentText(message);
-        a.setHeaderText("An Error Happened!");
+        a.setHeaderText(error?"An Error Happened!":"Done!");
         a.setTitle("Error");
         a.show();
     }

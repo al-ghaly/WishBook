@@ -293,4 +293,18 @@ public class DataAccessLayer {
         else
             return -1;
     }
+    
+        public static int recharge(String username, Long balance) throws SQLException{
+        DriverManager.registerDriver(new OracleDriver());
+        Connection con = DriverManager.getConnection(
+                "jdbc:oracle:thin:@localhost:1521:XE",
+                "WishBook", "123");
+
+        PreparedStatement stmt = con.prepareStatement(
+                "update users set balance = balance + ? where username = ?");
+        stmt.setString(2, username);
+        stmt.setLong(1, balance);
+        return stmt.executeUpdate();
+
+    }
 }

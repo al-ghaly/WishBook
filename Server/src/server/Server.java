@@ -202,6 +202,11 @@ class Listener extends Thread{
                                  = (Long)clinetMessage.get("price");
                          status = addCustomItem(username, itemName__, itemCat, itemPrice);
                          break;
+                     case "recharge":
+                         Long balance
+                                 = (Long)clinetMessage.get("balance");
+                         status = recharge(username, balance);
+                         break;
                     default:
                         break;
 }
@@ -213,6 +218,15 @@ class Listener extends Thread{
             catch(Exception e){
                 System.out.println("Error in the Database Server");
             }
+        }
+    }
+
+        private String recharge(String username, Long balance) {
+        try {
+            return DataAccessLayer.recharge(username, balance) == 1?"success":"failed";
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return "failed";
         }
     }
 
