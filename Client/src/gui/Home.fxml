@@ -22,13 +22,13 @@
       <RowConstraints />
   </rowConstraints>
    <children>
-      <GridPane maxWidth="-Infinity" minWidth="-Infinity" prefHeight="688.0" prefWidth="300.0" style="-fx-background-color: #F5F7FF;" GridPane.rowSpan="3">
+      <GridPane maxWidth="-Infinity" minWidth="-Infinity" prefHeight="688.0" prefWidth="300.0" style="-fx-background-color: rgba(236, 242, 255, 0.0);" GridPane.rowSpan="3">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="199.0" prefWidth="98.0" />
           <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
         </columnConstraints>
         <rowConstraints>
-            <RowConstraints maxHeight="144.0" minHeight="98.0" percentHeight="18.25" prefHeight="144.0" />
+            <RowConstraints maxHeight="144.0" minHeight="98.0"  prefHeight="144.0" />
             <RowConstraints maxHeight="144.0" minHeight="98.0" percentHeight="0.0" prefHeight="144.0" />
             <RowConstraints maxHeight="101.0" minHeight="10.0" percentHeight="7.3" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints maxHeight="87.0" minHeight="10.0" percentHeight="7.3" prefHeight="61.0" vgrow="SOMETIMES" />
@@ -39,8 +39,8 @@
             <RowConstraints minHeight="10.0" percentHeight="7.3" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" percentHeight="7.3" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" percentHeight="7.3" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" percentHeight="7.3" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="81.0" minHeight="10.0" percentHeight="11.55" prefHeight="81.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" percentHeight="7.3" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="81.0" minHeight="10.0"  prefHeight="81.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">

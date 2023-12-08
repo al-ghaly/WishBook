@@ -44,6 +44,15 @@ CREATE TABLE notifications
     CONSTRAINT fk6 FOREIGN KEY (username) REFERENCES users (username)
 );
 
+CREATE TABLE friend_requests
+(
+    username       VARCHAR2 (50),
+    friend_name    VARCHAR2 (50),
+    PRIMARY KEY (username, friend_name),
+    CONSTRAINT fk8 FOREIGN KEY (username) REFERENCES users (username),
+    CONSTRAINT fk9 FOREIGN KEY (friend_name) REFERENCES users (username)
+);
+
 ALTER TABLE users
 ADD CONSTRAINT check_positive_values CHECK (balance >= 0);
 

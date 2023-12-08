@@ -117,6 +117,7 @@ public void initialize(URL url, ResourceBundle rb) {
             boolean status = informServer(username, getItem(), true);
             if (status){
                 updateList(getItem());
+                friends.add(getItem());
             }
         });
 
@@ -159,7 +160,6 @@ public void initialize(URL url, ResourceBundle rb) {
                 socket.close();
 
                 if(response.equals("success")){
-                    friends.add(item);
                     return true;
                 }
                 else{

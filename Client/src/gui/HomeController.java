@@ -86,35 +86,35 @@ public class HomeController implements Initializable {
 
         //TODO: Remove the comment (We don't need to bother show the home page during test!!)
         // Load the home page content
-//        try {
-//            // Create the home page content.
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("./WishLists.fxml"));
-//            // Create an instance of your controller and set the data
-//            WishListsController wishListsController = new WishListsController();
-//            // Get the user's friends list here and pass an arraylist of usernames to the custom page
-//            if(listStatus.equals("success"))
-//                wishListsController.setData(friendsList);
-//            else
-//                showAlert("An Error Happened loading your Home Page");
-//
-//            loader.setControllerFactory(clazz -> {
-//                if (clazz == WishListsController.class) {
-//                    return wishListsController;
-//                } else {
-//                    try {
-//                        return clazz.newInstance();
-//                    } catch (Exception e) {
-//                        throw new RuntimeException(e);
-//                    }
-//                }
-//            });
-//            Parent testPage = loader.load();
-//            // Add the loaded page to the homeContent grid
-//            homeContent.getChildren().add(testPage);
-//
-//        } catch (IOException e) {
-//            showAlert("An Error Happened Loading your Home Page!!");
-//        }
+        try {
+            // Create the home page content.
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("./WishLists.fxml"));
+            // Create an instance of your controller and set the data
+            WishListsController wishListsController = new WishListsController();
+            // Get the user's friends list here and pass an arraylist of usernames to the custom page
+            if(listStatus.equals("success"))
+                wishListsController.setData(friendsList);
+            else
+                showAlert("An Error Happened loading your Home Page");
+
+            loader.setControllerFactory(clazz -> {
+                if (clazz == WishListsController.class) {
+                    return wishListsController;
+                } else {
+                    try {
+                        return clazz.newInstance();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+            Parent testPage = loader.load();
+            // Add the loaded page to the homeContent grid
+            homeContent.getChildren().add(testPage);
+
+        } catch (IOException e) {
+            showAlert("An Error Happened Loading your Home Page!!");
+        }
 
         profileButton.setOnAction(e -> {
             try {
