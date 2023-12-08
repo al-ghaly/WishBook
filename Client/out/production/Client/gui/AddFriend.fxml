@@ -8,7 +8,7 @@
 
 <?import javafx.scene.text.Font?>
 <?import javafx.geometry.Insets?>
-<GridPane fx:id="AddFriendscene" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="673.0" prefWidth="1200.0" style="-fx-background-color: 7D7C7C;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AddFriendController">
+<GridPane fx:id="AddFriendscene" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="673.0" prefWidth="1200.0" style="-fx-background-color: 7D7C7C;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" stylesheets="@../Styles/Style.css" fx:controller="gui.AddFriendController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" percentWidth="49.0" prefWidth="100.0" />
         <ColumnConstraints hgrow="SOMETIMES" percentWidth="60.0" prefWidth="100.0" />

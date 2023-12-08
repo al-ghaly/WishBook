@@ -5,6 +5,7 @@
 
 <ScrollPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
+            stylesheets="@../Styles/Style.css"
             fx:controller="gui.WishListsController"
             fitToWidth="true">
 

@@ -190,6 +190,18 @@ class Listener extends Thread{
                      case "notifications":
                          status = getNotifications(username);
                          break;
+                     case "add item":
+                         Long itemID_
+                                 = (Long)clinetMessage.get("id");
+                         status = addItem(username, itemID_);
+                         break;
+                     case "add custom item":
+                         String itemName__ = (String)clinetMessage.get("name");
+                         String itemCat = (String)clinetMessage.get("cat");
+                         Long itemPrice
+                                 = (Long)clinetMessage.get("price");
+                         status = addCustomItem(username, itemName__, itemCat, itemPrice);
+                         break;
                     default:
                         break;
 }
@@ -201,6 +213,23 @@ class Listener extends Thread{
             catch(Exception e){
                 System.out.println("Error in the Database Server");
             }
+        }
+    }
+
+    private String addCustomItem(String username, String itemName__, String itemCate, Long itemPrice) {
+        try {
+            return DataAccessLayer.addCustomItem(username, itemName__, itemCate, itemPrice) == 1?"success":"failed";
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return "failed";
+        }
+    }
+
+    private String addItem(String username, Long itemID_) {
+        try {
+            return DataAccessLayer.addItem(itemID_, username) == 1?"success":"failed";
+        } catch (SQLException ex) {
+            return "failed";
         }
     }
 

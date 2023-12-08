@@ -255,4 +255,42 @@ public class DataAccessLayer {
         results = stmt.executeQuery();
         return results;
     }
+
+    public static int addItem(Long itemID_, String username) throws SQLException{
+        DriverManager.registerDriver(new OracleDriver());
+        Connection con = DriverManager.getConnection(
+                "jdbc:oracle:thin:@localhost:1521:XE",
+                "WishBook", "123");
+
+        PreparedStatement stmt = con.prepareStatement(
+                "insert into user_items values (?, ?, SYSDATE, 0)");
+        stmt.setString(1, username);
+        stmt.setLong(2, itemID_);
+        return stmt.executeUpdate();
+    }
+
+    public static int addCustomItem(String username, String itemName__,
+                                    String itemCat, Long itemPrice) throws SQLException{
+        DriverManager.registerDriver(new OracleDriver());
+        Connection con = DriverManager.getConnection(
+                "jdbc:oracle:thin:@localhost:1521:XE",
+                "WishBook", "123");
+        con.setAutoCommit(false);
+        PreparedStatement stmt = con.prepareStatement(
+                "INSERT INTO items (name, category, price) VALUES (?, ?, ?)");
+        stmt.setString(1, itemName__);
+        stmt.setString(2, itemCat);
+        stmt.setLong(3, itemPrice);
+        int hasResults = stmt.executeUpdate();
+        if (hasResults == 1){
+            PreparedStatement stmt2 = con.prepareStatement(
+                    "insert into user_items values (?,ITEM_ID_SEQ.currval, SYSDATE, 0)");
+            stmt2.setString(1, username);
+            int results2 = stmt2.executeUpdate();
+            con.setAutoCommit(true);
+            return results2;
+        }
+        else
+            return -1;
+    }
 }

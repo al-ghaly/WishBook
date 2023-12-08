@@ -1,19 +1,19 @@
 .backgroundedLogin{
     -fx-background-image: url("../Images/Login.jpg");
     -fx-background-repeat: no-repeat;
-    -fx-background-size: cover; 
+    -fx-background-size: cover;
 }
 
 .backgroundedSignUp{
     -fx-background-image: url("../Images/Sign.png");
     -fx-background-repeat: no-repeat;
-    -fx-background-size: cover; 
+    -fx-background-size: cover;
 }
 
 .backgroundedHome{
     -fx-background-image: url("../Images/Img3.png");
     -fx-background-repeat: no-repeat;
-    -fx-background-size: cover; 
+    -fx-background-size: cover;
 }
 
 .profile-label {
@@ -24,8 +24,8 @@
     -fx-padding: 5px;
 }
 .root {
-    -fx-background-color: #1E1E1E;
-    -fx-text-fill: #FFFFFF;
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #333333;
 }
 
 .label {
@@ -41,13 +41,13 @@
 }
 
 .text-area {
-    -fx-control-inner-background: #2C3E50;
-    -fx-text-fill: #FFFFFF;
+    -fx-control-inner-background: #ECF0F1;
+    -fx-text-fill: #333333;
 }
 
 .list-view, .table-view {
-    -fx-background-color: #2C3E50;
-    -fx-text-fill: #FFFFFF;
+    -fx-background-color: #ECF0F1;
+    -fx-text-fill: #333333;
     -fx-table-cell-border-color: transparent;
 }
 
@@ -57,14 +57,22 @@
 }
 
 .list-cell:hover, .table-row-cell:hover {
-    -fx-background-color: #34495E;
+    -fx-background-color: #D5DBDB;
 }
 
 .table-view .column-header-background {
-    -fx-background-color: #2C3E50;
+    -fx-background-color: #3498DB;
     -fx-text-fill: #FFFFFF;
 }
 
 .table-column {
     -fx-alignment: CENTER;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #ECF0F1;
+}
+
+.table-row-cell:even {
+    -fx-background-color: #D5DBDB;
 }
