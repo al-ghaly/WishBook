@@ -145,7 +145,7 @@ public class DataAccessLayer {
             stmt1.executeUpdate();
 
             PreparedStatement stmt2 = con.prepareStatement(
-                    "insert into notifications values (?, 'User ' || ? || ' Contributed by ' || ? || ' To your item: ' || ?)");
+                    "insert into notifications values (?, 'User ' || ? || ' Contributed by ' || ? || ' To your item: ' || ?, SYSDATE)");
             stmt2.setString(1, username);
             stmt2.setString(2, clientName);
             stmt2.setLong(3, contribution);
@@ -154,7 +154,7 @@ public class DataAccessLayer {
             stmt2.executeUpdate();
             if (completed){
                 PreparedStatement stmt3 = con.prepareStatement(
-                        "insert into notifications values (?, 'Item ' || ? || ' is completed! Go collect it.')");
+                        "insert into notifications values (?, 'Item ' || ? || ' is completed! Go collect it.', SYSDATE)");
                 stmt3.setString(1, username);
                 stmt3.setString(2, itemName);
                 stmt3.executeUpdate();
@@ -196,7 +196,7 @@ public class DataAccessLayer {
                 "jdbc:oracle:thin:@localhost:1521:XE",
                 "WishBook", "123");
 
-        PreparedStatement stmt = con.prepareStatement("select friend_name from friend_requests where username = ?");
+        PreparedStatement stmt = con.prepareStatement("select username from friend_requests where friend_name = ?");
         stmt.setString(1, username);
 
         results = stmt.executeQuery();
@@ -235,8 +235,8 @@ public class DataAccessLayer {
 
         PreparedStatement pstmt = con.prepareStatement(query);
         // Set values for the parameters
-        pstmt.setString(1, username);
-        pstmt.setString(2, friendname);
+        pstmt.setString(2, username);
+        pstmt.setString(1, friendname);
 
         // Execute the query and return the ResultSet
         return pstmt.executeUpdate();
@@ -249,7 +249,7 @@ public class DataAccessLayer {
                 "jdbc:oracle:thin:@localhost:1521:XE",
                 "WishBook", "123");
 
-        PreparedStatement stmt = con.prepareStatement("select description from notifications where username = ?");
+        PreparedStatement stmt = con.prepareStatement("select description from notifications where username = ? order by date_added desc");
         stmt.setString(1, username);
 
         results = stmt.executeQuery();
@@ -307,4 +307,53 @@ public class DataAccessLayer {
         return stmt.executeUpdate();
 
     }
+
+    public static ResultSet getUsers() throws SQLException{
+        DriverManager.registerDriver(new OracleDriver());
+        Connection con = DriverManager.getConnection(
+                "jdbc:oracle:thin:@localhost:1521:XE",
+                "WishBook", "123");
+
+        PreparedStatement stmt = con.prepareStatement(
+                "select username, email from users");
+
+        return stmt.executeQuery();
+    }
+
+    public static int sendRequest(String username, String friendName__) throws SQLException{
+        DriverManager.registerDriver(new OracleDriver());
+        Connection con = DriverManager.getConnection(
+                "jdbc:oracle:thin:@localhost:1521:XE",
+                "WishBook", "123");
+
+        PreparedStatement stmt = con.prepareStatement(
+                "insert into FRIEND_REQUESTS values (?, ?)");
+        stmt.setString(1, username);
+        stmt.setString(2, friendName__);
+        return stmt.executeUpdate();
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

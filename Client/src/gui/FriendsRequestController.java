@@ -38,13 +38,15 @@ public class FriendsRequestController implements Initializable {
     ArrayList<String> friendsList = new ArrayList<>();
     int port = 4015;
     String ip = "127.0.0.1";
+    ArrayList<String> friends;
+    ObservableList<String> items;
 
     @Override
 public void initialize(URL url, ResourceBundle rb) {
         label.setText(username + "'s Friends Requests");
     // Add items to the ListView
     getRequests(username);
-    ObservableList<String> items = FXCollections.observableArrayList(friendsList);
+     items = FXCollections.observableArrayList(friendsList);
     
     // Set the cell factory to customize the rendering of each item
         listView.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
@@ -98,8 +100,9 @@ public void initialize(URL url, ResourceBundle rb) {
         }
     }
 
-    public void setData(String username) {
+    public void setData(String username, ArrayList<String> friends) {
         this.username = username;
+        this.friends = friends;
     }
 
     public class FriendListCell extends ListCell<String> {
@@ -112,12 +115,17 @@ public void initialize(URL url, ResourceBundle rb) {
         // Handle accept button action
         acceptButton.setOnAction(e -> {
             boolean status = informServer(username, getItem(), true);
-
+            if (status){
+                updateList(getItem());
+            }
         });
 
         // Handle reject button action
         rejectButton.setOnAction(e -> {
             boolean status = informServer(username, getItem(), false);
+            if (status){
+                updateList(getItem());
+            }
         });
 
         // Set HBox properties
@@ -126,7 +134,7 @@ public void initialize(URL url, ResourceBundle rb) {
         hbox.setAlignment(Pos.CENTER_LEFT);  // Align components to the left
     }
 
-        private boolean informServer(String username, String item, boolean accepted) {
+    private boolean informServer(String username, String item, boolean accepted) {
             try {
                 Socket socket = new Socket(ip, port);
                 // Create data input and output streams
@@ -151,6 +159,7 @@ public void initialize(URL url, ResourceBundle rb) {
                 socket.close();
 
                 if(response.equals("success")){
+                    friends.add(item);
                     return true;
                 }
                 else{
@@ -175,6 +184,11 @@ public void initialize(URL url, ResourceBundle rb) {
             setGraphic(hbox);
         }
     }
+
+    public void updateList(String item){
+        items.remove(item);
+        listView.refresh();
+    }
 }
 
     public void showAlert(String message) {
@@ -184,4 +198,5 @@ public void initialize(URL url, ResourceBundle rb) {
         a.setTitle("Error!!");
         a.show();
     }
+
 }

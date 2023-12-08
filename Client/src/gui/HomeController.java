@@ -320,7 +320,7 @@ public class HomeController implements Initializable {
 
         // Create an instance of your controller and set the data
         FriendsRequestController friendsRequestController = new FriendsRequestController();
-        friendsRequestController.setData(client.getUsername());
+        friendsRequestController.setData(client.getUsername(), friendsList);
 
         loader.setControllerFactory(clazz -> {
             if (clazz == FriendsRequestController.class) {

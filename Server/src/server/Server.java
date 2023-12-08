@@ -131,7 +131,7 @@ class Listener extends Thread{
                  
                  String type
                     = (String)clinetMessage.get("Type");
-                    String username
+                 String username
                             = (String)clinetMessage.get("username");
 
                  switch (type) {
@@ -207,6 +207,14 @@ class Listener extends Thread{
                                  = (Long)clinetMessage.get("balance");
                          status = recharge(username, balance);
                          break;
+                     case "load users":
+                         status = loadUsers();
+                         break;
+                     case "add friend":
+                         String friendName__
+                                 = (String)clinetMessage.get("friend name");
+                         status = sendRequest(username, friendName__);
+                         break;
                     default:
                         break;
 }
@@ -221,7 +229,15 @@ class Listener extends Thread{
         }
     }
 
-        private String recharge(String username, Long balance) {
+    private String sendRequest(String username, String friendName__) {
+        try {
+            return DataAccessLayer.sendRequest(username, friendName__) == 1?"success":"failed";
+        } catch (SQLException ex) {
+            return "failed";
+        }
+    }
+
+    private String recharge(String username, Long balance) {
         try {
             return DataAccessLayer.recharge(username, balance) == 1?"success":"failed";
         } catch (SQLException ex) {
@@ -234,7 +250,6 @@ class Listener extends Thread{
         try {
             return DataAccessLayer.addCustomItem(username, itemName__, itemCate, itemPrice) == 1?"success":"failed";
         } catch (SQLException ex) {
-            ex.printStackTrace();
             return "failed";
         }
     }
@@ -462,4 +477,25 @@ class Listener extends Thread{
             return "failed";
         }
     }
+    
+    private String loadUsers() {
+        JSONObject response = new JSONObject();
+        JSONArray users = new JSONArray();
+        try {
+            ResultSet usersData = DataAccessLayer.getUsers();
+
+            while (usersData.next()) {
+                String name = usersData.getString(1);
+                String email = usersData.getString(2);
+                users.add(name + "--" + email);
+            }
+            response.put("Status", "success");
+            response.put("usersData", users);
+        } catch (SQLException ex) {
+            response.put("Status", "failed");
+        }
+        return response.toString();
+    }
 }
+
+

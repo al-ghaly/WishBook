@@ -25,10 +25,7 @@
         <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="3">
             <left>
                 <TableView fx:id="tableAddFriend" prefHeight="532.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
-                    <columns>
-                        <TableColumn fx:id="usernamefield" prefWidth="601.0" text="Username" />
-                        <TableColumn fx:id="emailfield" prefWidth="597.0" text="Email" />
-                    </columns>
+
                 </TableView>
             </left>
         </BorderPane>
@@ -39,11 +36,6 @@
             </font>
         </Label>
         <TextField fx:id="friendsearch" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-        <Button fx:id="buttonSearch" mnemonicParsing="false" prefHeight="42.0" prefWidth="137.0" text="Search" GridPane.columnIndex="2" GridPane.rowIndex="2">
-            <GridPane.margin>
-                <Insets left="100.0" />
-            </GridPane.margin>
-        </Button>
         <Label alignment="CENTER" prefHeight="63.0" prefWidth="1200.0" text="Let's Make New Friends" GridPane.columnSpan="3" GridPane.rowIndex="1">
             <font>
                 <Font size="30.0" />
