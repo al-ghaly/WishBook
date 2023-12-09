@@ -19,6 +19,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -67,7 +68,7 @@ public class HomeController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
        usernameTxt.setText(client.getUsername());
-       balanceTxt.setText(client.getBalance() + " $");
+       balanceTxt.setText("       " + client.getBalance() + " $");
 
        aboutButton.setOnAction(e -> {
           popUpAbout();
@@ -84,8 +85,6 @@ public class HomeController implements Initializable {
         //TODO: This should happen in a separate thread
         listStatus = getFriends(client.getUsername());
 
-        //TODO: Remove the comment (We don't need to bother show the home page during test!!)
-        // Load the home page content
         try {
             // Create the home page content.
             FXMLLoader loader = new FXMLLoader(getClass().getResource("./WishLists.fxml"));
@@ -164,6 +163,7 @@ public class HomeController implements Initializable {
                 showAlert("An Error Happened");
             }
         });
+        //homeContent.setMaxWidth(700);
     }
 
     public String getFriends(String username){

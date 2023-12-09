@@ -103,8 +103,9 @@ public class SignUpController implements Initializable {
             return "Invalid Password";
         else
             try{
-                Long.parseLong(balance);
-                return "Good";
+                if(Long.parseLong(balance) >= 0)
+                    return "Good";
+                return "Invalid Balance";
             }
             catch(Exception e){
                 return "Invalid Balance";

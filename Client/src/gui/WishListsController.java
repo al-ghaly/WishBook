@@ -5,7 +5,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 
@@ -35,8 +37,17 @@ public class WishListsController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        //tablesContainer.setMaxWidth(250);
         // Create a wishlist table for each username
         for (String username : usernamesList) {
+            Label header = new Label(username);
+            // Set center alignment
+            header.setAlignment(Pos.CENTER);
+            // Optionally, you can set the label to stretch its width
+            header.setMaxWidth(Double.MAX_VALUE);
+            header.setAlignment(Pos.CENTER);
+            header.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: rgba(255, 255, 255, 0.8);");
+            tablesContainer.getChildren().add(header);
             TableView<Item> wishlist = createTableView(username);
             tablesContainer.getChildren().add(wishlist);
         }
@@ -46,22 +57,22 @@ public class WishListsController implements Initializable {
         // Create the empty table
         TableView<Item> tableView = new TableView<>();
 
-        List<String> strColumns = Arrays.asList("Username", "Name",
+        List<String> strColumns = Arrays.asList("Name",
                 "Category", "Date");
         strColumns.forEach(i -> {
             TableColumn<Item, String> column = new TableColumn<>(i);
             column.setCellValueFactory(new PropertyValueFactory<>(i));
             tableView.getColumns().add(column);
         });
-        List<String> intColumns = Arrays.asList("Price", "Paid");
+        List<String> intColumns = Arrays.asList("Price", "Paid", "Remaining");
         intColumns.forEach(i -> {
             TableColumn<Item, Integer> column = new TableColumn<>(i);
             column.setCellValueFactory(new PropertyValueFactory<>(i));
             tableView.getColumns().add(column);
         });
-        TableColumn<Item, Integer> column = new TableColumn<>("Id");
+        TableColumn<Item, Integer> column = new TableColumn<>("Item Id");
         column.setCellValueFactory(new PropertyValueFactory<>("Id"));
-        tableView.getColumns().add(1, column);
+        tableView.getColumns().add(0, column);
 
         // Fill the table
         fillTable(tableView, username);
@@ -76,12 +87,13 @@ public class WishListsController implements Initializable {
                 Item item = new Item();
                 String[] data = itemData.toString().split("--");
                 item.setId(Integer.parseInt(data[0]));
-                item.setPrice(Integer.parseInt(data[4]));
-                item.setPaid(Integer.parseInt(data[3]));
+                item.setPrice(Integer.parseInt(data[3]));
+                item.setPaid(Integer.parseInt(data[4]));
                 item.setName(data[1]);
                 item.setCategory(data[2]);
                 item.setUsername(username);
                 item.setDate(data[5]);
+                item.setRemaining(item.getPrice() - item.getPaid());
                 items.add(item);
             }
             tableView.setItems(items);

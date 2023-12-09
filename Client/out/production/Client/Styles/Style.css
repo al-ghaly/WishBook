@@ -11,7 +11,13 @@
 }
 
 .backgroundedHome{
-    -fx-background-image: url("../Images/Img3.png");
+    -fx-background-image: url("../Images/image2.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+}
+
+.backgroundedAddItem{
+    -fx-background-image: url("../Images/make-a-wish-upscaled(2).png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover;
 }
@@ -38,7 +44,7 @@
 
 /*Start Of Button Style*/
 .button {
-    -fx-background-color: #0078d0;
+     -fx-background-color: rgba(225, 152, 152, .5);
     -fx-border-width: 0;
     -fx-height: 48px;
     -fx-background-radius: 56px;
@@ -108,8 +114,5 @@
 }
 
 .table-row-cell:even {
-    -fx-background-color: #FFC47E;
+    -fx-background-color: #EBDCCB;
 }
-
-
-

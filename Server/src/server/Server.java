@@ -123,7 +123,6 @@ class Listener extends Thread{
         while (true){
             try{
                 message = inputData.readLine();
-            
                 if (message != null){
                  // Listen to the client
                  Object clientData = JSONValue.parse(message);
