@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import client.ClientSide;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -36,8 +38,6 @@ public class FriendsRequestController implements Initializable {
 
     String username;
     ArrayList<String> friendsList = new ArrayList<>();
-    int port = 4015;
-    String ip = "127.0.0.1";
     ArrayList<String> friends;
     ObservableList<String> items;
 
@@ -60,31 +60,21 @@ public void initialize(URL url, ResourceBundle rb) {
 
     private void getRequests(String username) {
         try {
-            Socket socket = new Socket(ip, port);
-            // Create data input and output streams
-            DataInputStream dis = new DataInputStream(socket.getInputStream());
-            PrintStream ps = new PrintStream(socket.getOutputStream());
-
             // Send data to the server
             JSONObject signUpData = new JSONObject();
             signUpData.put("Type", "get requests");
             signUpData.put("username", username);
             // Send the JSON string to the server
-            ps.println(signUpData);
-            ps.flush();
+            ClientSide.ps.println(signUpData);
+            ClientSide.ps.flush();
 
             // Read the server response
-            String response = dis.readLine();
+            String response = ClientSide.dis.readLine();
             // Behave according to the server response
             Object serverResponse = JSONValue.parse(response);
             JSONObject serverMessage = (JSONObject) serverResponse;
             String status
                     = (String) serverMessage.get("Status");
-
-            dis.close();
-            ps.close();
-            // Close the socket
-            socket.close();
 
             if(status.equals("success")){
                 JSONArray friends = (JSONArray) serverMessage.get("requests");
@@ -137,11 +127,6 @@ public void initialize(URL url, ResourceBundle rb) {
 
     private boolean informServer(String username, String item, boolean accepted) {
             try {
-                Socket socket = new Socket(ip, port);
-                // Create data input and output streams
-                DataInputStream dis = new DataInputStream(socket.getInputStream());
-                PrintStream ps = new PrintStream(socket.getOutputStream());
-
                 // Send data to the server
                 JSONObject signUpData = new JSONObject();
                 signUpData.put("Type", "reply to requests");
@@ -149,15 +134,11 @@ public void initialize(URL url, ResourceBundle rb) {
                 signUpData.put("friend name", item);
                 signUpData.put("status", accepted);
                 // Send the JSON string to the server
-                ps.println(signUpData);
-                ps.flush();
+                ClientSide.ps.println(signUpData);
+                ClientSide.ps.flush();
 
                 // Read the server response
-                String response = dis.readLine();
-                dis.close();
-                ps.close();
-                // Close the socket
-                socket.close();
+                String response = ClientSide.dis.readLine();
 
                 if(response.equals("success")){
                     return true;

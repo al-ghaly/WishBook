@@ -1,5 +1,6 @@
 package gui;
 
+import client.ClientSide;
 import client.Item;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -37,8 +38,6 @@ public class AddItemController
     ObservableList<Item> items = FXCollections.observableArrayList();;
     String username;
     JSONArray wishItems = new JSONArray();
-    int port = 4015;
-    String ip = "127.0.0.1";
 
     @javafx.fxml.FXML
     public void initialize() {
@@ -89,11 +88,6 @@ public class AddItemController
 
     private void addCustomItem(String username, String name, String cat, Long price) {
         try {
-            Socket socket = new Socket(ip, port);
-            // Create data input and output streams
-            DataInputStream dis = new DataInputStream(socket.getInputStream());
-            PrintStream ps = new PrintStream(socket.getOutputStream());
-
             // Send data to the server
             JSONObject signUpData = new JSONObject();
             signUpData.put("Type", "add custom item");
@@ -103,16 +97,12 @@ public class AddItemController
             signUpData.put("price", price);
 
             // Send the JSON string to the server
-            ps.println(signUpData);
-            ps.flush();
+            ClientSide.ps.println(signUpData);
+            ClientSide.ps.flush();
 
             // Read the server response
-            String response = dis.readLine();
+            String response = ClientSide.dis.readLine();
             // Behave according to the server response
-            dis.close();
-            ps.close();
-            // Close the socket
-            socket.close();
             if (response.equals("success")) {
                 showAlert("Item Added!", false);
             } else
@@ -142,11 +132,6 @@ public class AddItemController
 
     private void addItem(Item selectedItem) {
         try {
-            Socket socket = new Socket(ip, port);
-            // Create data input and output streams
-            DataInputStream dis = new DataInputStream(socket.getInputStream());
-            PrintStream ps = new PrintStream(socket.getOutputStream());
-
             // Send data to the server
             JSONObject signUpData = new JSONObject();
             signUpData.put("Type", "add item");
@@ -154,17 +139,13 @@ public class AddItemController
             signUpData.put("id", selectedItem.getId());
 
             // Send the JSON string to the server
-            ps.println(signUpData);
-            ps.flush();
+            ClientSide.ps.println(signUpData);
+            ClientSide.ps.flush();
 
             // Read the server response
-            String response = dis.readLine();
+            String response = ClientSide.dis.readLine();
             // Behave according to the server response
             Object serverResponse = JSONValue.parse(response);
-            dis.close();
-            ps.close();
-            // Close the socket
-            socket.close();
             if (response.equals("success")) {
                 showAlert("Item Added!", false);
             } else
@@ -209,30 +190,21 @@ public class AddItemController
 
     public String getWishList() {
         try {
-            Socket socket = new Socket(ip, port);
-            // Create data input and output streams
-            DataInputStream dis = new DataInputStream(socket.getInputStream());
-            PrintStream ps = new PrintStream(socket.getOutputStream());
-
             // Send data to the server
             JSONObject signUpData = new JSONObject();
             signUpData.put("Type", "wishlist");
             signUpData.put("username", "SYSTEM");
             // Send the JSON string to the server
-            ps.println(signUpData);
-            ps.flush();
+            ClientSide.ps.println(signUpData);
+            ClientSide.ps.flush();
 
             // Read the server response
-            String response = dis.readLine();
+            String response = ClientSide.dis.readLine();
             // Behave according to the server response
             Object serverResponse = JSONValue.parse(response);
             JSONObject serverMessage = (JSONObject) serverResponse;
             String status
                     = (String) serverMessage.get("Status");
-            dis.close();
-            ps.close();
-            // Close the socket
-            socket.close();
             if (status.equals("success")) {
                 wishItems = (JSONArray) serverMessage.get("wishes");
                 return "success";

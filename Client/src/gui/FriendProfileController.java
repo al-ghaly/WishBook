@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.*;
 
 import client.Client;
+import client.ClientSide;
 import client.Item;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -42,15 +43,12 @@ public class FriendProfileController implements Initializable {
     Client client = new Client();
     JSONArray wishItems = new JSONArray();
 
-    int port = 4015;
-    String ip = "127.0.0.1";
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         usernameTxt.setText(username);
         String status = getClientData(username);
         if(status.equals("success")){
-            balanceTxt.setText(client.getBalance() + " $");
+            balanceTxt.setText(" ");
             phoneTxt.setText(client.getPhone());
             emailTxt.setText(client.getEmail());
             setUpWishList();
@@ -91,11 +89,6 @@ public class FriendProfileController implements Initializable {
     public boolean contribute(String clientName, String username, int id, String itemName,
                               Long contribution, String message) {
         try {
-            Socket socket = new Socket(ip, port);
-            // Create data input and output streams
-            DataInputStream dis = new DataInputStream(socket.getInputStream());
-            PrintStream ps = new PrintStream(socket.getOutputStream());
-
             // Send data to the server
             JSONObject signUpData = new JSONObject();
             signUpData.put("Type", message);
@@ -105,15 +98,11 @@ public class FriendProfileController implements Initializable {
             signUpData.put("id", id);
             signUpData.put("contribution", contribution);
             // Send the JSON string to the server
-            ps.println(signUpData);
-            ps.flush();
+            ClientSide.ps.println(signUpData);
+            ClientSide.ps.flush();
 
             // Read the server response
-            String response = dis.readLine();
-            dis.close();
-            ps.close();
-            // Close the socket
-            socket.close();
+            String response = ClientSide.dis.readLine();
             return response.equals("success");
         } catch (Exception ex) {
             return false;
@@ -183,32 +172,22 @@ public class FriendProfileController implements Initializable {
 
     private String getClientData(String username) {
         try {
-            Socket socket = new Socket(ip, port);
-
-            // Create data input and output streams
-            DataInputStream dis = new DataInputStream(socket.getInputStream());
-            PrintStream ps = new PrintStream(socket.getOutputStream());
             JSONObject logInData = new JSONObject();
             logInData.put("Type", "friend profile");
             logInData.put("username", username);
 
             // Send the JSON string to the server
-            ps.println(logInData);
-            ps.flush();
+            ClientSide.ps.println(logInData);
+            ClientSide.ps.flush();
 
             // Read the server response
-            String response = dis.readLine();
+            String response = ClientSide.dis.readLine();
             // Behave according to the server response
             Object serverResponse = JSONValue.parse(response);
             JSONObject serverMessage = (JSONObject) serverResponse;
 
             String status
                     = (String) serverMessage.get("Status");
-
-            dis.close();
-            ps.close();
-            // Close the socket
-            socket.close();
 
             if(status.equals("success")) {
                 String balance = (String) serverMessage.get("balance");

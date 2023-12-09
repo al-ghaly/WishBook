@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import client.Client;
+import client.ClientSide;
 import client.Item;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -43,8 +44,6 @@ public class UserProfileController implements Initializable {
     Client client;
     JSONArray wishItems = new JSONArray();
 
-    int port = 4015;
-    String ip = "127.0.0.1";
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -107,26 +106,17 @@ public class UserProfileController implements Initializable {
 
     private void recharge(String username, Long balance) {
         try {
-            Socket socket = new Socket(ip, port);
-            // Create data input and output streams
-            DataInputStream dis = new DataInputStream(socket.getInputStream());
-            PrintStream ps = new PrintStream(socket.getOutputStream());
-
             // Send data to the server
             JSONObject signUpData = new JSONObject();
             signUpData.put("Type", "recharge");
             signUpData.put("username", username);
             signUpData.put("balance", balance);
             // Send the JSON string to the server
-            ps.println(signUpData);
-            ps.flush();
+            ClientSide.ps.println(signUpData);
+            ClientSide.ps.flush();
 
             // Read the server response
-            String response = dis.readLine();
-            dis.close();
-            ps.close();
-            // Close the socket
-            socket.close();
+            String response = ClientSide.dis.readLine();
             if (response.equals("success")) {
                 client.setBalance(client.getBalance() + balance);
                 balanceTxt.setText(client.getBalance() + " $");
@@ -164,30 +154,21 @@ public class UserProfileController implements Initializable {
 
     public String getWishList(String username) {
         try {
-            Socket socket = new Socket(ip, port);
-            // Create data input and output streams
-            DataInputStream dis = new DataInputStream(socket.getInputStream());
-            PrintStream ps = new PrintStream(socket.getOutputStream());
-
             // Send data to the server
             JSONObject signUpData = new JSONObject();
             signUpData.put("Type", "wishlist");
             signUpData.put("username", username);
             // Send the JSON string to the server
-            ps.println(signUpData);
-            ps.flush();
+            ClientSide.ps.println(signUpData);
+            ClientSide.ps.flush();
 
             // Read the server response
-            String response = dis.readLine();
+            String response = ClientSide.dis.readLine();
             // Behave according to the server response
             Object serverResponse = JSONValue.parse(response);
             JSONObject serverMessage = (JSONObject) serverResponse;
             String status
                     = (String) serverMessage.get("Status");
-            dis.close();
-            ps.close();
-            // Close the socket
-            socket.close();
             if (status.equals("success")) {
                 wishItems = (JSONArray) serverMessage.get("wishes");
                 return "success";
@@ -201,27 +182,18 @@ public class UserProfileController implements Initializable {
 
     public String deleteItem(int id, String username){
         try {
-            Socket socket = new Socket(ip, port);
-            // Create data input and output streams
-            DataInputStream dis = new DataInputStream(socket.getInputStream());
-            PrintStream ps = new PrintStream(socket.getOutputStream());
-
             // Send data to the server
             JSONObject itemData = new JSONObject();
             itemData.put("Type", "delete item");
             itemData.put("username", username);
             itemData.put("id", id);
             // Send the JSON string to the server
-            ps.println(itemData);
-            ps.flush();
+            ClientSide.ps.println(itemData);
+            ClientSide.ps.flush();
 
             // Read the server response
-            String response = dis.readLine();
+            String response = ClientSide.dis.readLine();
             // Behave according to the server response
-            dis.close();
-            ps.close();
-            // Close the socket
-            socket.close();
            return response;
         } catch (Exception ex) {
             return "failed";

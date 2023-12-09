@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import client.ClientSide;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
@@ -24,9 +25,6 @@ public class NotificationsController implements Initializable {
     private ListView<String> notificationsLst;
     JSONArray notifications;
 
-    int port = 4015;
-    String ip = "127.0.0.1";
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         header.setText(username + "'s Notifications");
@@ -38,28 +36,19 @@ public class NotificationsController implements Initializable {
 
     private void getNotifications(String username) {
         try {
-            Socket socket = new Socket(ip, port);
-
-            // Create data input and output streams
-            DataInputStream dis = new DataInputStream(socket.getInputStream());
-            PrintStream ps = new PrintStream(socket.getOutputStream());
             JSONObject logInData = new JSONObject();
             logInData.put("Type", "notifications");
             logInData.put("username", username);
 
             // Send the JSON string to the server
-            ps.println(logInData);
-            ps.flush();
+            ClientSide.ps.println(logInData);
+            ClientSide.ps.flush();
 
             // Read the server response
-            String response = dis.readLine();
+            String response = ClientSide.dis.readLine();
             // Behave according to the server response
             Object serverResponse = JSONValue.parse(response);
             JSONObject serverMessage = (JSONObject) serverResponse;
-            dis.close();
-            ps.close();
-            // Close the socket
-            socket.close();
             String status
                     = (String) serverMessage.get("Status");
             if(status.equals("success")){

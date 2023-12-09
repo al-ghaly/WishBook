@@ -107,6 +107,7 @@ class Listener extends Thread{
         PrintStream outputData;
         String message;
         String status;
+        DataAccessLayer database = DataAccessLayer.getInstance();
           
     public Listener(Socket socket){
         try{
@@ -230,7 +231,7 @@ class Listener extends Thread{
 
     private String sendRequest(String username, String friendName__) {
         try {
-            return DataAccessLayer.sendRequest(username, friendName__) == 1?"success":"failed";
+            return database.sendRequest(username, friendName__) == 1?"success":"failed";
         } catch (SQLException ex) {
             return "failed";
         }
@@ -238,7 +239,7 @@ class Listener extends Thread{
 
     private String recharge(String username, Long balance) {
         try {
-            return DataAccessLayer.recharge(username, balance) == 1?"success":"failed";
+            return database.recharge(username, balance) == 1?"success":"failed";
         } catch (SQLException ex) {
             ex.printStackTrace();
             return "failed";
@@ -247,7 +248,7 @@ class Listener extends Thread{
 
     private String addCustomItem(String username, String itemName__, String itemCate, Long itemPrice) {
         try {
-            return DataAccessLayer.addCustomItem(username, itemName__, itemCate, itemPrice) == 1?"success":"failed";
+            return database.addCustomItem(username, itemName__, itemCate, itemPrice) == 1?"success":"failed";
         } catch (SQLException ex) {
             return "failed";
         }
@@ -255,7 +256,7 @@ class Listener extends Thread{
 
     private String addItem(String username, Long itemID_) {
         try {
-            return DataAccessLayer.addItem(itemID_, username) == 1?"success":"failed";
+            return database.addItem(itemID_, username) == 1?"success":"failed";
         } catch (SQLException ex) {
             return "failed";
         }
@@ -266,7 +267,7 @@ class Listener extends Thread{
         JSONArray notifications = new JSONArray();
 
         try {
-            ResultSet results = DataAccessLayer.getNotifications(username);
+            ResultSet results = database.getNotifications(username);
             while (results.next()) {
                 String value = results.getString(1);
                 notifications.add(value);
@@ -283,8 +284,8 @@ class Listener extends Thread{
     private String replyToRequest(String username, String friendName_, boolean status_) {
         if(status_) {
             try {
-                DataAccessLayer.acceptFriend(username, friendName_);
-                DataAccessLayer.rejectFriend(username, friendName_);
+                database.acceptFriend(username, friendName_);
+                database.rejectFriend(username, friendName_);
                 return "success";
             } catch (Exception e) {
                 e.printStackTrace();
@@ -293,7 +294,7 @@ class Listener extends Thread{
         }
             else{
                 try {
-                    DataAccessLayer.rejectFriend(username, friendName_);
+                    database.rejectFriend(username, friendName_);
                     return "success";
                 }
                 catch (Exception e){
@@ -308,7 +309,7 @@ class Listener extends Thread{
         JSONArray requestsList = new JSONArray();
 
         try {
-            ResultSet results = DataAccessLayer.getRequests(username);
+            ResultSet results = database.getRequests(username);
             while (results.next()) {
                 String value = results.getString(1);
                 requestsList.add(value);
@@ -324,7 +325,7 @@ class Listener extends Thread{
 
     private String contribute(String clientName, String username, Long itemId, String itemName,
                               Long contribution, boolean completed) {
-        boolean updated =  DataAccessLayer.updateItem(clientName, username, itemId, itemName,
+        boolean updated =  database.updateItem(clientName, username, itemId, itemName,
                 contribution, completed);
         return updated?"success":"failed";
     }
@@ -333,8 +334,8 @@ class Listener extends Thread{
         JSONObject response = new JSONObject();
         JSONArray wishListItems = new JSONArray();
         try {
-            String resultsData = DataAccessLayer.getUser(username);
-            ResultSet resultsWishList = DataAccessLayer.getWishList(username);
+            String resultsData = database.getUser(username);
+            ResultSet resultsWishList = database.getWishList(username);
 
             while (resultsWishList.next()) {
                 String name = resultsWishList.getString(3);
@@ -363,7 +364,7 @@ class Listener extends Thread{
         JSONObject response = new JSONObject();
 
         try {
-            String results = DataAccessLayer.getUser(username);
+            String results = database.getUser(username);
             response.put("Status", "success");
             String[] parts = results.split("-");
             response.put("password", parts[0]);
@@ -404,7 +405,7 @@ class Listener extends Thread{
         client.setBalance(balance);
 
             try {
-                DataAccessLayer.addUser(client);
+                database.addUser(client);
                 return "success";
             } catch (SQLException ex) {
                 if(ex.getErrorCode() == 1)
@@ -419,7 +420,7 @@ class Listener extends Thread{
         JSONArray usernamesList = new JSONArray();
 
         try {
-            ResultSet results = DataAccessLayer.getFriends(username);
+            ResultSet results = database.getFriends(username);
 
             while (results.next()) {
                 String value = results.getString(1);
@@ -439,7 +440,7 @@ class Listener extends Thread{
         JSONArray wishListItems = new JSONArray();
 
         try {
-            ResultSet results = DataAccessLayer.getWishList(username);
+            ResultSet results = database.getWishList(username);
 
             while (results.next()) {
                 String name = results.getString(3);
@@ -463,7 +464,7 @@ class Listener extends Thread{
 
     public String deleteItem(Long id, String username){
         try {
-            return DataAccessLayer.deleteItem(id, username) == 1?"success":"failed";
+            return database.deleteItem(id, username) == 1?"success":"failed";
         } catch (SQLException ex) {
             return "failed";
         }
@@ -471,7 +472,7 @@ class Listener extends Thread{
 
     public String deleteFriend(String username, String friendName){
         try {
-            return DataAccessLayer.deleteFriend(username, friendName) == 1?"success":"failed";
+            return database.deleteFriend(username, friendName) == 1?"success":"failed";
         } catch (SQLException ex) {
             return "failed";
         }
@@ -481,7 +482,7 @@ class Listener extends Thread{
         JSONObject response = new JSONObject();
         JSONArray users = new JSONArray();
         try {
-            ResultSet usersData = DataAccessLayer.getUsers();
+            ResultSet usersData = database.getUsers();
 
             while (usersData.next()) {
                 String name = usersData.getString(1);

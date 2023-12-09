@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.*;
 
 import client.Client;
+import client.ClientSide;
 import client.ClientTable;
 import client.Item;
 import javafx.collections.FXCollections;
@@ -30,8 +31,6 @@ public class AddFriendController implements Initializable {
     private TextField friendsearch;
 
     ArrayList<ClientTable> users = new ArrayList<>();
-    int port = 4015;
-    String ip = "127.0.0.1";
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -63,22 +62,17 @@ public class AddFriendController implements Initializable {
 
     private void addFriend(String username, String friendName) {
         try {
-            Socket socket = new Socket(ip, port);
-
-            // Create data input and output streams
-            DataInputStream dis = new DataInputStream(socket.getInputStream());
-            PrintStream ps = new PrintStream(socket.getOutputStream());
             JSONObject logInData = new JSONObject();
             logInData.put("Type", "add friend");
             logInData.put("username", username);
             logInData.put("friend name", friendName);
 
             // Send the JSON string to the server
-            ps.println(logInData);
-            ps.flush();
+            ClientSide.ps.println(logInData);
+            ClientSide.ps.flush();
 
             // Read the server response
-            String response = dis.readLine();
+            String response = ClientSide.dis.readLine();
 
             if (response.equals("success")) {
                 showAlert("Request sent ^_^!", false);
@@ -86,10 +80,7 @@ public class AddFriendController implements Initializable {
             else{
                 showAlert("An error happened connecting to server!", true);
             }
-            dis.close();
-            ps.close();
-            // Close the socket
-            socket.close();
+
         } catch (Exception ex) {
             // Provide feedback to the user about the error
             showAlert("An error happened connecting to server!", true);
@@ -115,20 +106,15 @@ public class AddFriendController implements Initializable {
 
     private void loadUsers() {
         try {
-            Socket socket = new Socket(ip, port);
-
-            // Create data input and output streams
-            DataInputStream dis = new DataInputStream(socket.getInputStream());
-            PrintStream ps = new PrintStream(socket.getOutputStream());
             JSONObject logInData = new JSONObject();
             logInData.put("Type", "load users");
 
             // Send the JSON string to the server
-            ps.println(logInData);
-            ps.flush();
+            ClientSide.ps.println(logInData);
+            ClientSide.ps.flush();
 
             // Read the server response
-            String response = dis.readLine();
+            String response = ClientSide.dis.readLine();
             // Behave according to the server response
             Object serverResponse = JSONValue.parse(response);
             JSONObject serverMessage = (JSONObject) serverResponse;
@@ -150,10 +136,6 @@ public class AddFriendController implements Initializable {
             else{
                 showAlert("An error happened connecting to server!", true);
             }
-            dis.close();
-            ps.close();
-            // Close the socket
-            socket.close();
         } catch (Exception ex) {
             // Provide feedback to the user about the error
             showAlert("An error happened connecting to server!", true);

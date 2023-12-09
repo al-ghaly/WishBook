@@ -1,61 +1,64 @@
 package database;
 
 import java.sql.*;
+
 import oracle.jdbc.OracleDriver;
 import utilities.*;
 
 public class DataAccessLayer {
-  
-    public static void connect() throws SQLException{
-        DriverManager.registerDriver(new OracleDriver());
-        Connection con = DriverManager.getConnection(
-                "jdbc:oracle:thin:@localhost:1521:XE", 
-                "WishBook", "123");
-    }
-      
-    public static int addUser(Client client) throws SQLException{
-        int results;
-        DriverManager.registerDriver(new OracleDriver());
-        Connection con = DriverManager.getConnection(
-                "jdbc:oracle:thin:@localhost:1521:XE", 
-                "WishBook", "123");
+    private static DataAccessLayer instance;
+    private Connection connection;
 
-        PreparedStatement stmt = con.prepareStatement(
+    // Private constructor to prevent instantiation outside the class
+    private DataAccessLayer() {
+        // Initialize the connection here
+        try {
+            DriverManager.registerDriver(new OracleDriver());
+            connection = DriverManager.getConnection(
+                    "jdbc:oracle:thin:@localhost:1521:XE",
+                    "WishBook", "123");
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle the exception appropriately
+        }
+    }
+
+    // Method to get the single instance of the class
+    public static synchronized DataAccessLayer getInstance() {
+        if (instance == null) {
+            instance = new DataAccessLayer();
+        }
+        return instance;
+    }
+
+    // Connect method can now be an instance method
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public void addUser(Client client) throws SQLException {
+        PreparedStatement stmt = connection.prepareStatement(
                 "insert into users values(?, ?, ?, ?, ?)");
-        stmt.setString(1, client.getUsername());
-        stmt.setString(2, client.getPassword());
-        stmt.setString(3, client.getEmail());
-        stmt.setString(4, client.getPhone());
-        stmt.setLong(5, client.getBalance());
-        results = stmt.executeUpdate();         
-        return results;
+            stmt.setString(1, client.getUsername());
+            stmt.setString(2, client.getPassword());
+            stmt.setString(3, client.getEmail());
+            stmt.setString(4, client.getPhone());
+            stmt.setLong(5, client.getBalance());
+            stmt.executeUpdate();
     }
 
-    public static String getUser(String username) throws SQLException{
+    public String getUser(String username) throws SQLException {
         ResultSet results;
-        DriverManager.registerDriver(new OracleDriver());
-        Connection con = DriverManager.getConnection(
-                "jdbc:oracle:thin:@localhost:1521:XE",
-                "WishBook", "123");
-
-        PreparedStatement stmt = con.prepareStatement(
+        PreparedStatement stmt = connection.prepareStatement(
                 "Select password, balance, email, phone from users where username = ?");
-        stmt.setString(1, username);
-
-        results = stmt.executeQuery();
-        results.next();
-        return results.getString(1) + "-" + results.getLong(2)
-                 + "-" + results.getString(3) + "-" + results.getString(4);
+            stmt.setString(1, username);
+            results = stmt.executeQuery();
+            results.next();
+            return results.getString(1) + "-" + results.getLong(2)
+                    + "-" + results.getString(3) + "-" + results.getString(4);
     }
 
-    public static ResultSet getFriends(String username) throws SQLException{
-        ResultSet results;
-        DriverManager.registerDriver(new OracleDriver());
-        Connection con = DriverManager.getConnection(
-                "jdbc:oracle:thin:@localhost:1521:XE",
-                "WishBook", "123");
-
-        PreparedStatement stmt = con.prepareStatement(
+    public  ResultSet getFriends(String username) throws SQLException{
+        PreparedStatement stmt = connection.prepareStatement(
                 "SELECT friend_name\n" +
                         "  FROM friends\n" +
                         " WHERE username = ?\n" +
@@ -65,19 +68,11 @@ public class DataAccessLayer {
                         " WHERE friend_name = ?");
         stmt.setString(1, username);
         stmt.setString(2, username);
-
-        results = stmt.executeQuery();
-        return results;
+        return stmt.executeQuery();
     }
 
-    public static ResultSet getWishList(String username) throws SQLException{
-        ResultSet results;
-        DriverManager.registerDriver(new OracleDriver());
-        Connection con = DriverManager.getConnection(
-                "jdbc:oracle:thin:@localhost:1521:XE",
-                "WishBook", "123");
-
-        PreparedStatement stmt = con.prepareStatement(
+    public  ResultSet getWishList(String username) throws SQLException{
+        PreparedStatement stmt = connection.prepareStatement(
                 "SELECT ui.id,\n" +
                         "       paid,\n" +
                         "       name,\n" +
@@ -87,31 +82,19 @@ public class DataAccessLayer {
                         "  FROM user_items ui, items i\n" +
                         " WHERE ui.id = i.id and username = ?");
         stmt.setString(1, username);
-
-        results = stmt.executeQuery();
-        return results;
+        return stmt.executeQuery();
     }
 
-    public static int deleteItem(Long id, String username) throws SQLException{
-        DriverManager.registerDriver(new OracleDriver());
-        Connection con = DriverManager.getConnection(
-                "jdbc:oracle:thin:@localhost:1521:XE",
-                "WishBook", "123");
-
-        PreparedStatement stmt = con.prepareStatement(
+    public int deleteItem(Long id, String username) throws SQLException{
+        PreparedStatement stmt = connection.prepareStatement(
                 "delete from user_items where username = ? and id = ?");
         stmt.setString(1, username);
         stmt.setLong(2, id);
         return stmt.executeUpdate();
     }
 
-    public static int deleteFriend(String username, String friendName) throws SQLException{
-        DriverManager.registerDriver(new OracleDriver());
-        Connection con = DriverManager.getConnection(
-                "jdbc:oracle:thin:@localhost:1521:XE",
-                "WishBook", "123");
-
-        PreparedStatement stmt = con.prepareStatement(
+    public int deleteFriend(String username, String friendName) throws SQLException{
+        PreparedStatement stmt = connection.prepareStatement(
                 "DELETE FROM\n" +
                         "    friends\n" +
                         "      WHERE    (username = ? AND friend_name = ?)\n" +
@@ -123,28 +106,22 @@ public class DataAccessLayer {
         return stmt.executeUpdate();
     }
 
-    public static boolean updateItem(String clientName, String username,
-                                  Long itemId, String itemName,
-                                  Long contribution,
-                                  boolean completed){
-        Connection con = null;
+    public boolean updateItem(String clientName, String username,
+                                     Long itemId, String itemName,
+                                     Long contribution,
+                                     boolean completed){
         try {
-            DriverManager.registerDriver(new OracleDriver());
-            con = DriverManager.getConnection(
-                    "jdbc:oracle:thin:@localhost:1521:XE",
-                    "WishBook", "123");
-
             // Disable auto-commit to start a transaction
-            con.setAutoCommit(false);
+            connection.setAutoCommit(false);
 
             // Prepare and execute your first delete statement
-            PreparedStatement stmt1 = con.prepareStatement(
+            PreparedStatement stmt1 = connection.prepareStatement(
                     "update users set balance = balance - ? where username = ?");
             stmt1.setString(2, clientName);
             stmt1.setLong(1, contribution);
             stmt1.executeUpdate();
 
-            PreparedStatement stmt2 = con.prepareStatement(
+            PreparedStatement stmt2 = connection.prepareStatement(
                     "insert into notifications values (?, 'User ' || ? || ' Contributed by ' || ? || ' To your item: ' || ?, SYSDATE)");
             stmt2.setString(1, username);
             stmt2.setString(2, clientName);
@@ -153,34 +130,34 @@ public class DataAccessLayer {
 
             stmt2.executeUpdate();
             if (completed){
-                PreparedStatement stmt3 = con.prepareStatement(
+                PreparedStatement stmt3 = connection.prepareStatement(
                         "insert into notifications values (?, 'Item ' || ? || ' is completed! Go collect it.', SYSDATE)");
                 stmt3.setString(1, username);
                 stmt3.setString(2, itemName);
                 stmt3.executeUpdate();
 
-                PreparedStatement stmt4 = con.prepareStatement(
+                PreparedStatement stmt4 = connection.prepareStatement(
                         "delete from user_items where username = ? and id = ?");
                 stmt4.setString(1, username);
                 stmt4.setLong(2, itemId);
                 stmt4.executeUpdate();
             }
             else {
-                PreparedStatement stmt5 = con.prepareStatement(
+                PreparedStatement stmt5 = connection.prepareStatement(
                         "update user_items set paid = paid + ? where username = ? and id = ?");
                 stmt5.setLong(1, contribution);
                 stmt5.setString(2, username);
                 stmt5.setLong(3, itemId);
                 stmt5.executeUpdate();
             }
-            con.commit();
-            con.setAutoCommit(true);
+            connection.commit();
+            connection.setAutoCommit(true);
             return true;
         } catch (SQLException e) {
             // Handle exceptions and rollback the transaction if an error occurs
-            if (con != null) {
+            if (connection != null) {
                 try {
-                    con.rollback();
+                    connection.rollback();
                 } catch (SQLException rollbackException) {
                     return false;
                 }
@@ -189,150 +166,91 @@ public class DataAccessLayer {
         }
     }
 
-    public static ResultSet getRequests(String username) throws SQLException{
-        ResultSet results;
-        DriverManager.registerDriver(new OracleDriver());
-        Connection con = DriverManager.getConnection(
-                "jdbc:oracle:thin:@localhost:1521:XE",
-                "WishBook", "123");
-
-        PreparedStatement stmt = con.prepareStatement("select username from friend_requests where friend_name = ?");
+    public ResultSet getRequests(String username) throws SQLException{
+        PreparedStatement stmt = connection.prepareStatement("select username from friend_requests where friend_name = ?");
         stmt.setString(1, username);
-
-        results = stmt.executeQuery();
-        return results;
+        return stmt.executeQuery();
     }
 
 
-    public static int acceptFriend(String username, String friendname) throws SQLException {
-        DriverManager.registerDriver(new OracleDriver());
-        Connection con = DriverManager.getConnection(
-                "jdbc:oracle:thin:@localhost:1521:XE",
-                "WishBook", "123");
-
-        // Use a PreparedStatement with placeholders for parameters
-        //String query = "SELECT username, email, phone FROM users";
+    public void acceptFriend(String username, String friendname) throws SQLException {
         String query1 = "INSERT INTO friends VALUES(?, ?)";
 
-        PreparedStatement pstmt = con.prepareStatement(query1);
+        PreparedStatement pstmt = connection.prepareStatement(query1);
         // Set values for the parameters
         pstmt.setString(1, username);
         pstmt.setString(2, friendname);
-
-        // Execute the query and return the ResultSet
-        return pstmt.executeUpdate();
+        pstmt.executeUpdate();
     }
 
-    public static int rejectFriend(String username, String friendname) throws SQLException {
-        DriverManager.registerDriver(new OracleDriver());
-        Connection con = DriverManager.getConnection(
-                "jdbc:oracle:thin:@localhost:1521:XE",
-                "WishBook", "123");
-
-        // Use a PreparedStatement with placeholders for parameters
-        //String query = "SELECT username, email, phone FROM users";
+    public void rejectFriend(String username, String friendname) throws SQLException {
         String query = "DELETE FROM friend_requests WHERE username = ? and friend_name = ?";
 
-        PreparedStatement pstmt = con.prepareStatement(query);
+        PreparedStatement pstmt = connection.prepareStatement(query);
         // Set values for the parameters
         pstmt.setString(2, username);
         pstmt.setString(1, friendname);
-
-        // Execute the query and return the ResultSet
-        return pstmt.executeUpdate();
+        pstmt.executeUpdate();
     }
 
-    public static ResultSet getNotifications(String username) throws SQLException{
-        ResultSet results;
-        DriverManager.registerDriver(new OracleDriver());
-        Connection con = DriverManager.getConnection(
-                "jdbc:oracle:thin:@localhost:1521:XE",
-                "WishBook", "123");
-
-        PreparedStatement stmt = con.prepareStatement("select description from notifications where username = ? order by date_added desc");
+    public ResultSet getNotifications(String username) throws SQLException{
+        PreparedStatement stmt = connection.prepareStatement("select description from notifications where username = ? order by date_added desc");
         stmt.setString(1, username);
-
-        results = stmt.executeQuery();
-        return results;
+        return stmt.executeQuery();
     }
 
-    public static int addItem(Long itemID_, String username) throws SQLException{
-        DriverManager.registerDriver(new OracleDriver());
-        Connection con = DriverManager.getConnection(
-                "jdbc:oracle:thin:@localhost:1521:XE",
-                "WishBook", "123");
-
-        PreparedStatement stmt = con.prepareStatement(
+    public int addItem(Long itemID_, String username) throws SQLException{
+        PreparedStatement stmt = connection.prepareStatement(
                 "insert into user_items values (?, ?, SYSDATE, 0)");
         stmt.setString(1, username);
         stmt.setLong(2, itemID_);
         return stmt.executeUpdate();
     }
 
-    public static int addCustomItem(String username, String itemName__,
+    public int addCustomItem(String username, String itemName__,
                                     String itemCat, Long itemPrice) throws SQLException{
-        DriverManager.registerDriver(new OracleDriver());
-        Connection con = DriverManager.getConnection(
-                "jdbc:oracle:thin:@localhost:1521:XE",
-                "WishBook", "123");
-        con.setAutoCommit(false);
-        PreparedStatement stmt = con.prepareStatement(
+        connection.setAutoCommit(false);
+        PreparedStatement stmt = connection.prepareStatement(
                 "INSERT INTO items (name, category, price) VALUES (?, ?, ?)");
         stmt.setString(1, itemName__);
         stmt.setString(2, itemCat);
         stmt.setLong(3, itemPrice);
         int hasResults = stmt.executeUpdate();
         if (hasResults == 1){
-            PreparedStatement stmt2 = con.prepareStatement(
+            PreparedStatement stmt2 = connection.prepareStatement(
                     "insert into user_items values (?,ITEM_ID_SEQ.currval, SYSDATE, 0)");
             stmt2.setString(1, username);
             int results2 = stmt2.executeUpdate();
-            con.setAutoCommit(true);
+            connection.setAutoCommit(true);
             return results2;
         }
         else
             return -1;
     }
-    
-        public static int recharge(String username, Long balance) throws SQLException{
-        DriverManager.registerDriver(new OracleDriver());
-        Connection con = DriverManager.getConnection(
-                "jdbc:oracle:thin:@localhost:1521:XE",
-                "WishBook", "123");
 
-        PreparedStatement stmt = con.prepareStatement(
+    public int recharge(String username, Long balance) throws SQLException{
+        PreparedStatement stmt = connection.prepareStatement(
                 "update users set balance = balance + ? where username = ?");
         stmt.setString(2, username);
         stmt.setLong(1, balance);
         return stmt.executeUpdate();
-
     }
 
-    public static ResultSet getUsers() throws SQLException{
-        DriverManager.registerDriver(new OracleDriver());
-        Connection con = DriverManager.getConnection(
-                "jdbc:oracle:thin:@localhost:1521:XE",
-                "WishBook", "123");
-
-        PreparedStatement stmt = con.prepareStatement(
+    public ResultSet getUsers() throws SQLException{
+        PreparedStatement stmt = connection.prepareStatement(
                 "select username, email from users");
-
         return stmt.executeQuery();
     }
 
-    public static int sendRequest(String username, String friendName__) throws SQLException{
-        DriverManager.registerDriver(new OracleDriver());
-        Connection con = DriverManager.getConnection(
-                "jdbc:oracle:thin:@localhost:1521:XE",
-                "WishBook", "123");
-
-        PreparedStatement stmt = con.prepareStatement(
+    public int sendRequest(String username, String friendName__) throws SQLException{
+        PreparedStatement stmt = connection.prepareStatement(
                 "insert into FRIEND_REQUESTS values (?, ?)");
         stmt.setString(1, username);
         stmt.setString(2, friendName__);
         return stmt.executeUpdate();
     }
 }
+
 
 
 

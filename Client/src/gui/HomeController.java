@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import client.Client;
+import client.ClientSide;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -57,9 +58,6 @@ public class HomeController implements Initializable {
     ArrayList<String> friendsList = new ArrayList<>();
     // success or failed depending on whether or not we retrieved the user's friends list successfully
     String listStatus;
-    int port = 4015;
-    String ip = "127.0.0.1";
-
 
     public void setData(Client client) {
         this.client = client;
@@ -163,36 +161,25 @@ public class HomeController implements Initializable {
                 showAlert("An Error Happened");
             }
         });
-        //homeContent.setMaxWidth(700);
     }
 
     public String getFriends(String username){
         try {
-            Socket socket = new Socket(ip, port);
-            // Create data input and output streams
-            DataInputStream dis = new DataInputStream(socket.getInputStream());
-            PrintStream ps = new PrintStream(socket.getOutputStream());
-
             // Send data to the server
             JSONObject signUpData = new JSONObject();
             signUpData.put("Type", "friends list");
             signUpData.put("username", username);
             // Send the JSON string to the server
-            ps.println(signUpData);
-            ps.flush();
+            ClientSide.ps.println(signUpData);
+            ClientSide.ps.flush();
 
             // Read the server response
-            String response = dis.readLine();
+            String response = ClientSide.dis.readLine();
             // Behave according to the server response
             Object serverResponse = JSONValue.parse(response);
             JSONObject serverMessage = (JSONObject) serverResponse;
             String status
                     = (String) serverMessage.get("Status");
-
-            dis.close();
-            ps.close();
-            // Close the socket
-            socket.close();
 
             if(status.equals("success")){
                 JSONArray friends = (JSONArray) serverMessage.get("friends");

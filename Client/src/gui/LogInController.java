@@ -33,8 +33,6 @@ public class LogInController implements Initializable {
     @FXML
     private Button signUpButton;
 
-    int port = 4015;
-    String ip = "127.0.0.1";
     private Stage stage;
     private Scene scene;
 
@@ -69,21 +67,16 @@ public class LogInController implements Initializable {
 
     private void handleLogin(Client client, ActionEvent e) {
         try {
-            Socket socket = new Socket(ip, port);
-
-            // Create data input and output streams
-            DataInputStream dis = new DataInputStream(socket.getInputStream());
-            PrintStream ps = new PrintStream(socket.getOutputStream());
             JSONObject logInData = new JSONObject();
             logInData.put("Type", "sign in");
             logInData.put("username", client.getUsername());
 
             // Send the JSON string to the server
-            ps.println(logInData);
-            ps.flush();
+            ClientSide.ps.println(logInData);
+            ClientSide.ps.flush();
 
             // Read the server response
-            String response = dis.readLine();
+            String response = ClientSide.dis.readLine();
             // Behave according to the server response
             Object serverResponse = JSONValue.parse(response);
             JSONObject serverMessage = (JSONObject) serverResponse;
@@ -116,11 +109,6 @@ public class LogInController implements Initializable {
                     showAlert("An Error Happened. Try Later.");
                     break;
             }
-
-            dis.close();
-            ps.close();
-            // Close the socket
-            socket.close();
         } catch (Exception ex) {
             // Provide feedback to the user about the error
             showAlert("Server is Down!\nWe may be on a break. Try Later.");

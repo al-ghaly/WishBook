@@ -1,10 +1,13 @@
 package gui;
 
+import client.Client;
+import client.ClientSide;
 import client.Item;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -32,13 +35,21 @@ public class WishListsController implements Initializable {
     ArrayList<String> usernamesList = new ArrayList<>();
     JSONArray wishItems = new JSONArray();
 
-    int port = 4015;
-    String ip = "127.0.0.1";
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //tablesContainer.setMaxWidth(250);
         // Create a wishlist table for each username
+        if(usernamesList.size() == 0){
+            Label header = new Label("You are So lonely\nMake new Friends");
+            // Set center alignment
+            header.setAlignment(Pos.CENTER);
+            // Optionally, you can set the label to stretch its width
+            header.setMaxWidth(Double.MAX_VALUE);
+            header.setMaxHeight(Double.MAX_VALUE);
+            header.setAlignment(Pos.CENTER);
+            header.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
+            tablesContainer.getChildren().add(header);
+        }
         for (String username : usernamesList) {
             Label header = new Label(username);
             // Set center alignment
@@ -46,7 +57,7 @@ public class WishListsController implements Initializable {
             // Optionally, you can set the label to stretch its width
             header.setMaxWidth(Double.MAX_VALUE);
             header.setAlignment(Pos.CENTER);
-            header.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: rgba(255, 255, 255, 0.8);");
+            header.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
             tablesContainer.getChildren().add(header);
             TableView<Item> wishlist = createTableView(username);
             tablesContainer.getChildren().add(wishlist);
@@ -102,30 +113,21 @@ public class WishListsController implements Initializable {
 
     public String getWishList(String username){
         try {
-            Socket socket = new Socket(ip, port);
-            // Create data input and output streams
-            DataInputStream dis = new DataInputStream(socket.getInputStream());
-            PrintStream ps = new PrintStream(socket.getOutputStream());
-
             // Send data to the server
             JSONObject signUpData = new JSONObject();
             signUpData.put("Type", "wishlist");
             signUpData.put("username", username);
             // Send the JSON string to the server
-            ps.println(signUpData);
-            ps.flush();
+            ClientSide.ps.println(signUpData);
+            ClientSide.ps.flush();
 
             // Read the server response
-            String response = dis.readLine();
+            String response = ClientSide.dis.readLine();
             // Behave according to the server response
             Object serverResponse = JSONValue.parse(response);
             JSONObject serverMessage = (JSONObject) serverResponse;
             String status
                     = (String) serverMessage.get("Status");
-            dis.close();
-            ps.close();
-            // Close the socket
-            socket.close();
             if(status.equals("success")){
                 wishItems = (JSONArray) serverMessage.get("wishes");
                 return "success";

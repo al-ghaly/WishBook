@@ -9,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import client.Client;
+import client.ClientSide;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -40,8 +41,6 @@ public class SignUpController implements Initializable {
     @FXML
     private TextField balanceTxt;
 
-    int port = 4015;
-    String ip = "127.0.0.1";
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -114,11 +113,6 @@ public class SignUpController implements Initializable {
 
     private void handleSignUp(Client client, ActionEvent e) {
         try {
-            Socket socket = new Socket(ip, port);
-            // Create data input and output streams
-            DataInputStream dis = new DataInputStream(socket.getInputStream());
-            PrintStream ps = new PrintStream(socket.getOutputStream());
-
             // Send data to the server
             JSONObject signUpData = new JSONObject();
             signUpData.put("Type", "sign up");
@@ -128,11 +122,11 @@ public class SignUpController implements Initializable {
             signUpData.put("phone", client.getPhone());
             signUpData.put("balance", client.getBalance());
             // Send the JSON string to the server
-            ps.println(signUpData);
-            ps.flush();
+            ClientSide.ps.println(signUpData);
+            ClientSide.ps.flush();
 
             // Read the server response
-            String response = dis.readLine();
+            String response = ClientSide.dis.readLine();
 
             // Process the response (you can customize this part)
             switch (response){
@@ -149,11 +143,6 @@ public class SignUpController implements Initializable {
                 case "error":
                     showAlert("An Error happened!!\nTry Later");
             }
-
-            dis.close();
-            ps.close();
-            // Close the socket
-            socket.close();
         } catch (Exception ex) {
             showAlert("Server is Down!\nWe may be on a break!\nTry Later.");
         }

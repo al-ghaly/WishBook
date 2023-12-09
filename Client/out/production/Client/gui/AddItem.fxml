@@ -75,17 +75,17 @@
                         <Insets left="40.0" right="40.0" />
                     </GridPane.margin>
                 </TextField>
-                <Label style="-fx-font-size: 18;" text="Enter The Item's Name">
+                <Label style="-fx-font-size: 18; -fx-text-fill: white;" text="Enter The Item's Name">
                     <GridPane.margin>
                         <Insets left="40.0" />
                     </GridPane.margin>
                 </Label>
-                <Label style="-fx-font-size: 18;" text="Enter The Item's Category" GridPane.rowIndex="2">
+                <Label style="-fx-font-size: 18; -fx-text-fill: white;" text="Enter The Item's Category" GridPane.rowIndex="2">
                     <GridPane.margin>
                         <Insets left="40.0" />
                     </GridPane.margin>
                 </Label>
-                <Label style="-fx-font-size: 18;" text="Enter The Item's Price" GridPane.rowIndex="4">
+                <Label style="-fx-font-size: 18; -fx-text-fill: white;" text="Enter The Item's Price" GridPane.rowIndex="4">
                     <GridPane.margin>
                         <Insets left="40.0" />
                     </GridPane.margin>
