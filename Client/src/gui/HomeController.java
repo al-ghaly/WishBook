@@ -65,6 +65,7 @@ public class HomeController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        homeContent.setMaxWidth(605);
        usernameTxt.setText(client.getUsername());
        balanceTxt.setText("       " + client.getBalance() + " $");
 

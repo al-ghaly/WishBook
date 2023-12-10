@@ -14,6 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import client.*;
 import javafx.event.ActionEvent;
@@ -27,7 +28,7 @@ public class LogInController implements Initializable {
     @FXML
     private TextField usernameTxt;
     @FXML
-    private TextField passwordTxt;
+    private PasswordField passwordTxt;
     @FXML
     private Button loginButton;
     @FXML

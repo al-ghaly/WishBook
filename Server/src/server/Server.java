@@ -125,6 +125,12 @@ class Listener extends Thread{
             try{
                 message = inputData.readLine();
                 if (message != null){
+                    System.out.println(message);
+                    if (message.equals("close connection")){
+                        inputData.close();
+                        outputData.close();
+                        break;
+                    }
                  // Listen to the client
                  Object clientData = JSONValue.parse(message);
                  JSONObject clinetMessage = (JSONObject)clientData;

@@ -90,7 +90,7 @@
                         <Insets left="40.0" />
                     </GridPane.margin>
                 </Label>
-                <Button fx:id="addCutomBtn" mnemonicParsing="false" style="-fx-font-size: 20;" text="Add Item" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
+                <Button fx:id="addCutomBtn" mnemonicParsing="false" text="Add Item" GridPane.halignment="CENTER" GridPane.rowIndex="6" style="-fx-background-color: rgba(225, 152, 152, .8);-fx-font-size: 24; -fx-font-weight: bold;"/>
             </children>
             <GridPane.margin>
                 <Insets bottom="20.0" left="100.0" right="100.0" />
@@ -101,7 +101,7 @@
                 <Insets bottom="20.0" left="50.0" right="50.0" top="20.0" />
             </GridPane.margin>
         </Label>
-        <Button fx:id="addMarketBtn" alignment="CENTER" mnemonicParsing="false" style="-fx-font-size: 20;" text="Save" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+        <Button fx:id="addMarketBtn" alignment="CENTER" mnemonicParsing="false"  text="Save" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" style="-fx-background-color: rgba(225, 152, 152, .8);-fx-font-size: 24; -fx-font-weight: bold;">
             <GridPane.margin>
                 <Insets />
             </GridPane.margin>

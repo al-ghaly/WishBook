@@ -47,7 +47,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="removeBtn" alignment="CENTER" mnemonicParsing="false" style="-fx-label-padding: 5 15 5 15;" styleClass="profile-label" stylesheets="@../Styles/Style.css" text="Remove Friend" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+            <Button fx:id="removeBtn" alignment="CENTER" mnemonicParsing="false" style="-fx-background-color: rgba(225, 152, 152, .8);-fx-font-size: 20; -fx-font-weight: bold;" stylesheets="@../Styles/Style.css" text="Remove Friend" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>

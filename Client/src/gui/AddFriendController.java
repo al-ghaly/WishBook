@@ -34,11 +34,13 @@ public class AddFriendController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        tableAddFriend.setMaxWidth(750);
         loadUsers();
         List<String> strColumns = Arrays.asList("Username", "email");
         strColumns.forEach(i -> {
             TableColumn<ClientTable, String> column = new TableColumn<>(i);
             column.setCellValueFactory(new PropertyValueFactory<>(i));
+            column.setPrefWidth(375);
             tableAddFriend.getColumns().add(column);
         });
         // Disable the remove button if no items are selected

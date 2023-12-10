@@ -37,7 +37,6 @@ public class WishListsController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //tablesContainer.setMaxWidth(250);
         // Create a wishlist table for each username
         if(usernamesList.size() == 0){
             Label header = new Label("You are So lonely\nMake new Friends");
@@ -56,11 +55,15 @@ public class WishListsController implements Initializable {
             header.setAlignment(Pos.CENTER);
             // Optionally, you can set the label to stretch its width
             header.setMaxWidth(Double.MAX_VALUE);
+            //header.setMaxHeight(Double.MAX_VALUE);
             header.setAlignment(Pos.CENTER);
             header.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
-            tablesContainer.getChildren().add(header);
+
             TableView<Item> wishlist = createTableView(username);
-            tablesContainer.getChildren().add(wishlist);
+            if (wishlist != null){
+                tablesContainer.getChildren().add(header);
+                tablesContainer.getChildren().add(wishlist);
+            }
         }
     }
 
@@ -86,29 +89,34 @@ public class WishListsController implements Initializable {
         tableView.getColumns().add(0, column);
 
         // Fill the table
-        fillTable(tableView, username);
-        return tableView;
+        return fillTable(tableView, username)?tableView:null;
     }
 
-    public void fillTable(TableView<Item> tableView, String username){
+    public boolean fillTable(TableView<Item> tableView, String username){
         if(getWishList(username).equals("success")) {
             ObservableList<Item> items =
                     FXCollections.observableArrayList();
-            for (Object itemData : wishItems) {
-                Item item = new Item();
-                String[] data = itemData.toString().split("--");
-                item.setId(Integer.parseInt(data[0]));
-                item.setPrice(Integer.parseInt(data[3]));
-                item.setPaid(Integer.parseInt(data[4]));
-                item.setName(data[1]);
-                item.setCategory(data[2]);
-                item.setUsername(username);
-                item.setDate(data[5]);
-                item.setRemaining(item.getPrice() - item.getPaid());
-                items.add(item);
+            if (wishItems.size() == 0)
+                return false;
+            else {
+                for (Object itemData : wishItems) {
+                    Item item = new Item();
+                    String[] data = itemData.toString().split("--");
+                    item.setId(Integer.parseInt(data[0]));
+                    item.setPrice(Integer.parseInt(data[3]));
+                    item.setPaid(Integer.parseInt(data[4]));
+                    item.setName(data[1]);
+                    item.setCategory(data[2]);
+                    item.setUsername(username);
+                    item.setDate(data[5]);
+                    item.setRemaining(item.getPrice() - item.getPaid());
+                    items.add(item);
+                }
+                tableView.setItems(items);
+                return true;
             }
-            tableView.setItems(items);
         }
+        return false;
     }
 
     public String getWishList(String username){

@@ -16,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -29,14 +30,15 @@ public class FriendProfileController implements Initializable {
     private Label emailTxt;
     @FXML
     private Label phoneTxt;
-    @FXML
-    private Label balanceTxt;
+
     @FXML
     private Button contBtn;
     @FXML
     private TextField valueTxt;
     @FXML
     private TableView<Item> wishList;
+    @FXML
+    private GridPane headerGrid;
 
     String username;
     String clientName;
@@ -48,7 +50,6 @@ public class FriendProfileController implements Initializable {
         usernameTxt.setText(username);
         String status = getClientData(username);
         if(status.equals("success")){
-            balanceTxt.setText(" ");
             phoneTxt.setText(client.getPhone());
             emailTxt.setText(client.getEmail());
             setUpWishList();
@@ -84,6 +85,8 @@ public class FriendProfileController implements Initializable {
                 }
             }
         });
+        wishList.setMaxWidth(750);
+        headerGrid.setMaxWidth(750);
     }
 
     public boolean contribute(String clientName, String username, int id, String itemName,

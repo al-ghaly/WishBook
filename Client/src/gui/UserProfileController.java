@@ -47,6 +47,7 @@ public class UserProfileController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
         usernameTxt.setText(client.getUsername());
         balanceTxt.setText(client.getBalance() + " $");
         phoneTxt.setText(client.getPhone());
@@ -102,6 +103,7 @@ public class UserProfileController implements Initializable {
                 showAlert("Enter a valid balance Number!", true);
             }
         });
+        wishList.setMaxWidth(700);
     }
 
     private void recharge(String username, Long balance) {
@@ -119,7 +121,7 @@ public class UserProfileController implements Initializable {
             String response = ClientSide.dis.readLine();
             if (response.equals("success")) {
                 client.setBalance(client.getBalance() + balance);
-                balanceTxt.setText(client.getBalance() + " $");
+                balanceTxt.setText( client.getBalance() + " $");
                 showAlert("Done", false);
             } else
                 showAlert("An Error Happened!", true);

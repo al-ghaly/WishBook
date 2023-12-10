@@ -28,6 +28,8 @@ public class ClientSide extends Application {
             @Override
             public void handle(WindowEvent event) {
                 try {
+                    ps.println("close connection");
+                    ps.flush();
                     socket.close();
                     dis.close();
                     ps.close();

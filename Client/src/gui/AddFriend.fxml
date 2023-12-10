@@ -22,24 +22,21 @@
         <RowConstraints maxHeight="379.0" minHeight="90.0" percentHeight="14.0" prefHeight="113.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
-        <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="3">
-            <left>
+        <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="3" GridPane.halignment="CENTER">
+<center>
                 <TableView fx:id="tableAddFriend" prefHeight="532.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
-
                 </TableView>
-            </left>
+</center>
         </BorderPane>
-        <Button fx:id="buttonAddFriend" mnemonicParsing="false" prefHeight="53.0" prefWidth="456.0" text="Add Friend" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-        <Label alignment="CENTER" prefHeight="61.0" prefWidth="352.0" text="Write a Username or letters from it" wrapText="true" GridPane.rowIndex="2">
-            <font>
-                <Font size="21.0" />
-            </font>
+        <Button fx:id="buttonAddFriend" mnemonicParsing="false" prefHeight="53.0" prefWidth="300" text="Add Friend" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.halignment="CENTER" style="-fx-background-color: rgba(225, 152, 152, .8);-fx-font-size: 24; -fx-font-weight: bold;"/>
+        <Label alignment="CENTER" prefHeight="61.0" prefWidth="352.0" text="Write a Username or letters from it" wrapText="true" GridPane.rowIndex="2" style="-fx-text-fill: white; -fx-font-size: 20px;">
         </Label>
         <TextField fx:id="friendsearch" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-        <Label alignment="CENTER" prefHeight="63.0" prefWidth="1200.0" text="Let's Make New Friends" GridPane.columnSpan="3" GridPane.rowIndex="1">
-            <font>
-                <Font size="30.0" />
-            </font>
+        <Label alignment="CENTER" prefHeight="63.0" prefWidth="1200.0" text="Let's Make New Friends" GridPane.columnSpan="3" GridPane.rowIndex="1" style="-fx-text-fill: white; -fx-font-size: 28px;">
         </Label>
     </children>
+    <styleClass>
+        <String fx:value="b" />
+        <String fx:value="backgroundedAddItem" />
+    </styleClass>
 </GridPane>

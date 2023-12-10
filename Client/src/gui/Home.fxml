@@ -94,7 +94,7 @@
                </font></Button>
             <ImageView fitHeight="125.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                <image>
-                  <Image url="@../Images/icons8-user-100.png" />
+                  <Image url="@../Images/icons8-male-user-100.png" />
                </image>
                <GridPane.margin>
                   <Insets top="85.0" />
@@ -109,8 +109,8 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label fx:id="usernameTxt" alignment="CENTER" prefHeight="74.0" prefWidth="297.0" style="-fx-font-weight: bold; -fx-font-size: 18; -fx-padding: 0 0 0 101;" text="Rahaf" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                  <Label fx:id="balanceTxt" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #EE7214 -fx-padding: 0 0 0 80;" text="0 $" GridPane.columnIndex="1" />
+                  <Label fx:id="usernameTxt" alignment="CENTER" prefHeight="74.0" prefWidth="297.0" style="-fx-font-weight: bold; -fx-font-size: 20; -fx-padding: 0 0 0 81; -fx-text-fill: white;" text="Rahaf" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <Label fx:id="balanceTxt" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #EE7214 -fx-padding: 0 0 0 0; -fx-text-fill: white;" text="0 $" GridPane.columnIndex="1" />
                </children>
             </GridPane>
             <Button fx:id="requestButton" layoutX="85.0" layoutY="229.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Friend Requests" GridPane.columnIndex="1" GridPane.rowIndex="8">
@@ -131,7 +131,7 @@
           <RowConstraints minHeight="10.0" percentHeight="100.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <GridPane.margin>
-            <Insets bottom="10.0" left="60.0" right="120.0" top="30.0" />
+            <Insets bottom="10.0" left="130.0" right="120.0" top="30.0" />
          </GridPane.margin>
       </GridPane>
    </children>

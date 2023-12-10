@@ -5,6 +5,7 @@ import javafx.scene.control.Label;
 import javafx.scene.effect.Blend;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -39,7 +40,6 @@ public class About extends GridPane {
     protected final Label label6;
 
     public About() {
-
         columnConstraints = new ColumnConstraints();
         columnConstraints0 = new ColumnConstraints();
         columnConstraints1 = new ColumnConstraints();
